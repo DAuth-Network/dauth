@@ -4,8 +4,8 @@
 
 node_modules/
 
-!src/index.css
-
 index.js*
 index.d.ts
 index.css*
+
+!src/index.css
