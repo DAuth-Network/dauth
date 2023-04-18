@@ -9,7 +9,7 @@ interface ISignInItem {
 const SignInItem: FC<ISignInItem> = ({ item }) => {
   const Icon = getIcons(item.name as ISupportedIcons)
   return (
-    <div className="flex gap-4 py-4 border-b max-w-sm border-dark-grey ">
+    <div className='flex gap-4 py-4 border-b max-w-sm border-dark-gray '>
       <Icon />
       <div className="flex flex-col justify-center">
         <div className="font-semibold">{item.title}</div>
