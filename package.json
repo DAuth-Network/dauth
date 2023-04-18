@@ -1,5 +1,11 @@
 {
   "name": "dauth",
-  "version": "0.0.1",
-  "private": true
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "ci:publish": "pnpm publish -r"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.1"
+  }
 }
