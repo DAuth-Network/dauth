@@ -5,6 +5,7 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
+    "watch": "node esbuild.config.mjs --watch",
     "build": "node esbuild.config.mjs && tsc --emitDeclarationOnly --declaration --outFile index.d.ts && echo 'declare module \"@dauth/provider\" {\n    export * from \"index\"\n}' >> index.d.ts",
     "format": "prettier --write src"
   },

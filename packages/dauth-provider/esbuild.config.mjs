@@ -1,7 +1,7 @@
 import * as esbuild from 'esbuild'
 import { tailwindPlugin } from 'esbuild-plugin-tailwindcss'
 
-await esbuild.build({
+const option = {
   entryPoints: ['src/index.ts'],
   outfile: 'index.js',
   bundle: true,
@@ -13,4 +13,11 @@ await esbuild.build({
     '.png': 'dataurl',
   },
   plugins: [tailwindPlugin()],
-})
+}
+
+if (process.argv.slice(2).includes('--watch')) {
+  const ctx = await esbuild.context(option)
+  await ctx.watch()
+} else {
+  await esbuild.build()
+}
