@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-const baseURL = 'https://dev-api.dauth.network/dauth/exchange'
+const baseURL = 'https://dev-api.dauth.network/dauth/sdk/v1/'
 const instance = axios.create({
   baseURL,
 })
