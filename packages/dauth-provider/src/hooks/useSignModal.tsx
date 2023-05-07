@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import DAuthModal from '../components/Modal/DAuthModal'
 import SignInItem from '../components/signInItem'
 import { ISignInMethodItem } from '../types'

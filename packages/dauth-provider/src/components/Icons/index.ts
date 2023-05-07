@@ -5,7 +5,6 @@ import TwitterIcon from './TwitterIcon'
 import GithubIcon from './GithubIcon'
 import FaceBookIcon from './FaceBookIcon'
 
-const supportedIcons = ['google', 'email', 'twitter']
 
 const icons = {
   google: GoogleIcons,

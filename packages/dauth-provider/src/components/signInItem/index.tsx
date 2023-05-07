@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { ISignInMethodItem, ISupportedIcons } from '../../types'
 import { getIcons } from '../Icons'
 

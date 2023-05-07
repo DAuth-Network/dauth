@@ -1,10 +1,6 @@
-import "@dauth/provider/index.css";
-import {
-  Button,
-  useDauthModal,
-  useEmailModal,
-  useSignModal,
-} from "@dauth/provider";
+import "@dauth/dauth-provider/dist/style.css";
+import "@dauth/dauth-provider/dist/tailwind.css";
+import { useDauthModal, useSignModal, useEmailModal, Button } from "@dauth/dauth-provider";
 
 function App() {
   const { Modal, showModal: showDauthModal } = useDauthModal();
@@ -12,6 +8,7 @@ function App() {
   const { Modal: EmailModal, showModal: showEmailModal } = useEmailModal();
   return (
     <div className="App">
+      123
       <Modal />
       <SignModal />
       <EmailModal />
@@ -26,6 +23,7 @@ function App() {
       </Button>
     </div>
   );
+  
 }
 
 export default App;

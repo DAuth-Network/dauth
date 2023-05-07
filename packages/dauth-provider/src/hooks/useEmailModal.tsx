@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import DAuthModal from '../components/Modal/DAuthModal'
 import EmailInput from '../components/Input/EmailInput'
 import { EStep } from '../types'
@@ -8,12 +8,12 @@ import exchangeKey from '../services/exchangeKey'
 import { dauth_registerEmail } from '../services/http'
 import { encrypt } from '../utils/crypt'
 import { useRequest } from 'ahooks'
-
+import logo from "./demo-logo2.png"
 const useEmailModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const [email, setEmail] = useState('')
   const [step, setStep] = useState(0)
-  const [loadingStep, setLoadingStep] = useState(EStep.default)
+  const [, setLoadingStep] = useState(EStep.default)
   const closeModal = () => {
     toggleModalShow(false)
   }
@@ -43,14 +43,14 @@ const useEmailModal = () => {
       console.log(error)
     }
   }
-  const { loading, run, refreshAsync } = useRequest(handleSubmit, {
+  const { refreshAsync } = useRequest(handleSubmit, {
     manual: true,
   })
 
   const Modal = () => (
     <DAuthModal modalIsOpen={modalShow} closeModal={closeModal}>
       <div className="flex flex-col items-center">
-        <img src={require('./demo-logo2.png')} width={180} height={100} alt="" />
+        <img src={logo} width={180} height={100} alt="" />
 
         <div className="text-lg text-center my-4">Signing in with email</div>
       </div>

@@ -1,4 +1,3 @@
-import React from 'react'
 import IconsWithBg from './Icons'
 import { BsFacebook } from 'react-icons/bs'
 

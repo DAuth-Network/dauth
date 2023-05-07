@@ -42,7 +42,6 @@ export function hashStr(cond: string) {
 }
 
 export async function hashAndEncrypt(rawText: string, key: string) {
-  const hash = hashStr(rawText)
   const encrypted = await encrypt(rawText, key)
   return encrypted
 }

@@ -48,11 +48,7 @@ export const dauth_exchangeKey = async (payload: exchangeKeyEequestPayload): Pro
   }
 }
 
-// Register email
-interface registerEmailEequestPayload {
-  cipher_email: string
-  session_id: string
-}
+
 
 export const dauth_registerEmail = async (payload: RequestPayload): Promise<any> => {
   try {
@@ -63,11 +59,6 @@ export const dauth_registerEmail = async (payload: RequestPayload): Promise<any>
   }
 }
 
-// Confirm registered email
-interface registerEmailEequestPayload {
-  cipher_code: string
-  session_id: string
-}
 
 export const dauth_confirmRegisteredEmail = async (payload: RequestPayload): Promise<any> => {
   try {

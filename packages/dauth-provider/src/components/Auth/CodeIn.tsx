@@ -1,5 +1,5 @@
 import { useCountDown, useRequest } from 'ahooks'
-import React, { FC, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import AuthCode, { AuthCodeRef } from 'react-auth-code-input'
 import { FiMail } from 'react-icons/fi'
 import { sleep } from '../../utils'
@@ -69,7 +69,7 @@ const CodeIn: FC<ICodeIn> = ({ email, resend, show = false }) => {
       setStatus(Estep.failed)
     }
   }
-  const { run } = useRequest(submitCode, {
+  useRequest(submitCode, {
     ready: code.length === 6,
     debounceWait: 200,
   })

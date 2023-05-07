@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
-import { FaEyeSlash } from 'react-icons/fa'
-import { MdOutlineLock } from 'react-icons/md'
+import { useState } from 'react'
 import DAuthModal from '../components/Modal/DAuthModal'
 
 const useGoogleConnectModal = () => {

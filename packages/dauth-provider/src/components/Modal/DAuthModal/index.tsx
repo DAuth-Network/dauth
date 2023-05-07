@@ -1,6 +1,6 @@
 import Button from '../../Button'
 import Logo from '../../Logo/Logo'
-import React, { FC, ReactNode } from 'react'
+import { FC, ReactNode } from 'react'
 
 interface IDAuthModal {
   modalIsOpen: boolean
