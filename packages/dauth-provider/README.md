@@ -1,3 +1,5 @@
+> This is an alpha version , which means it is still in early development and may contain bugs or incomplete features. Use at your own risk.
+
 ## How to use dauth-provider 
 
 Dauth-provider provides react modal UI toolkits for integrating dauth into your website.
@@ -22,17 +24,9 @@ function App() {
   }
   return (
     <div className="App">
-      <Modal />
       <SignModal onSuccess={handleSuccess} />
-      <EmailModal onSuccess={handleSuccess} />
-      <Button onClick={showDauthModal} className="w-64">
-        show modal
-      </Button>
       <Button onClick={showSignModal} className="w-64">
-        show SignModal
-      </Button>
-      <Button onClick={showEmailModal} className="w-64">
-        show SignModal
+        login with dauth
       </Button>
     </div>
   );
