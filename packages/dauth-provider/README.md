@@ -9,12 +9,10 @@ Dauth-provider provides react modal UI toolkits for integrating dauth into your 
 ```typescript
 import "@dauth/dauth-provider/dist/style.css";
 import "@dauth/dauth-provider/dist/tailwind.css";
-import { useDauthModal, useSignModal, useEmailModal, Button } from "@dauth/dauth-provider";
+import { useSignModal, Button } from "@dauth/dauth-provider";
 
 function App() {
-  const { Modal, showModal: showDauthModal } = useDauthModal();
   const { Modal: SignModal, showModal: showSignModal } = useSignModal();
-  const { Modal: EmailModal, showModal: showEmailModal } = useEmailModal();
   const handleSuccess = (token: string) => {
     // token is JWT token
     console.log(token)
