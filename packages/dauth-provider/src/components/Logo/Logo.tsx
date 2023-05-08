@@ -1,5 +1,5 @@
 import { FC } from 'react'
-
+import LogoImg from './logo.png'
 interface ILogo {
   className?: string
 }
@@ -7,7 +7,7 @@ interface ILogo {
 const Logo: FC<ILogo> = ({ className }) => {
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      {/* <img src={require('./logo.png')} width={18} /> */}
+      <img src={LogoImg} width={18} />
       <div className="ml-2 text-lg">DAuth Network</div>
     </div>
   )

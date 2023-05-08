@@ -8,7 +8,7 @@ import exchangeKey from '../services/exchangeKey'
 import { dauth_registerEmail } from '../services/http'
 import { encrypt } from '../utils/crypt'
 import { useRequest } from 'ahooks'
-import logo from "./demo-logo2.png"
+import logo from "../assets/demo-logo2.png"
 const useEmailModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const [email, setEmail] = useState('')

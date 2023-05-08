@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { FaEyeSlash } from 'react-icons/fa'
 import { MdOutlineLock } from 'react-icons/md'
 import DAuthModal from '../components/Modal/DAuthModal'
-
+import Logo from './demo-logo.png'
 const useDauthModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const closeModal = () => {
@@ -15,7 +15,7 @@ const useDauthModal = () => {
   const Modal = ({ onConfirm }: any) => (
     <DAuthModal modalIsOpen={modalShow} closeModal={closeModal} onConfirm={onConfirm}>
       <div className="flex flex-col items-center">
-        {/* <img src={require('./demo-logo.png')} width={100} height={100} alt="" /> */}
+        <img src={Logo} width={100} height={100} alt="" />
 
         <div className="text-lg text-center my-4">
           Authenticate your identity anonymously with the{' '}

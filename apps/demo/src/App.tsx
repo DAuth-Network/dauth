@@ -8,13 +8,13 @@ function App() {
   const { Modal: EmailModal, showModal: showEmailModal } = useEmailModal();
   return (
     <div className="App">
-      123
       <Modal />
       <SignModal />
       <EmailModal />
       <Button onClick={showDauthModal} className="w-64">
         show modal
       </Button>
+      <div className=" text-red-300">12312</div>
       <Button onClick={showSignModal} className="w-64">
         show SignModal
       </Button>
