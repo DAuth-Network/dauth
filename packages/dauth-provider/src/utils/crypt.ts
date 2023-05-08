@@ -1,5 +1,6 @@
 import forge from 'node-forge'
-import exchangeKey from '../services/exchangeKey';
+import exchangeKey from '../services/exchangeKey'
+
 export async function encrypt(rawText: string, key: string) {
     console.log("encrypt content", rawText, " with ", key);
     if (key === "") {

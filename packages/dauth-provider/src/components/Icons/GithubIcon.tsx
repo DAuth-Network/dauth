@@ -1,4 +1,3 @@
-import React from 'react'
 import IconsWithBg from './Icons'
 import { AiFillGithub } from 'react-icons/ai'
 

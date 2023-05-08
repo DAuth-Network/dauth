@@ -1,15 +1,16 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { ISignInMethodItem, ISupportedIcons } from '../../types'
 import { getIcons } from '../Icons'
 
 interface ISignInItem {
-  item: ISignInMethodItem
+  item: ISignInMethodItem,
+  onClick: (item: ISignInMethodItem) => void
 }
 
-const SignInItem: FC<ISignInItem> = ({ item }) => {
+const SignInItem: FC<ISignInItem> = ({ item, onClick }) => {
   const Icon = getIcons(item.name as ISupportedIcons)
   return (
-    <div className='flex gap-4 py-4 border-b max-w-sm border-dark-gray '>
+    <div className="flex gap-4 py-4 border-b max-w-sm border-dark-grey cursor-pointer " onClick={() => {onClick(item)}}>
       <Icon />
       <div className="flex flex-col justify-center">
         <div className="font-semibold">{item.title}</div>

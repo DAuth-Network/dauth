@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import { FC, ReactNode } from 'react'
 
 interface IIcons {
   children: ReactNode
@@ -7,7 +7,7 @@ interface IIcons {
 
 const IconsWithBg: FC<IIcons> = ({ children, className }) => {
   return (
-    <div className={`w-16 h-16 flex justify-center items-center  rounded-xl ${className}`}>
+    <div className={`w-16 h-16 flex justify-center items-center  rounded-2xl ${className}`}>
       {children}
     </div>
   )

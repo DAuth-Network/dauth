@@ -22,11 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.idea/
-
-!src/index.css
-
-index.js*
-index.d.ts
-index.css*
-

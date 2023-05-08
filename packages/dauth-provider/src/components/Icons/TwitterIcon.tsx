@@ -1,4 +1,3 @@
-import React from 'react'
 import IconsWithBg from './Icons'
 import { AiOutlineTwitter } from 'react-icons/ai'
 

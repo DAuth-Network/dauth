@@ -1,18 +1,46 @@
-# @dauth/provider
+## How to use dauth-provider 
 
-## Usage
+Dauth-provider provides react modal UI toolkits for integrating dauth into your website.
 
-### Install
+## example
 
-```shell
-npm i @dauth/provider
-# or
-yarn add @dauth/provider
+```typescript
+import "@dauth/dauth-provider/dist/style.css";
+import "@dauth/dauth-provider/dist/tailwind.css";
+import { useDauthModal, useSignModal, useEmailModal, Button } from "@dauth/dauth-provider";
+
+function App() {
+  const { Modal, showModal: showDauthModal } = useDauthModal();
+  const { Modal: SignModal, showModal: showSignModal } = useSignModal();
+  const { Modal: EmailModal, showModal: showEmailModal } = useEmailModal();
+  const handleSuccess = (token: string) => {
+    // token is JWT token
+    console.log(token)
+    // TODO: handle token
+    // And you can find more information about JWT in https://app.gitbook.com/o/STgvl98TJZ4EXC3dYgGB/s/5k83JZlV6lz01m7DmSkh/~/changes/26/developers/api-guide
+    // You can verify token with https://jwt.io/libraries. 
+  }
+  return (
+    <div className="App">
+      <Modal />
+      <SignModal onSuccess={handleSuccess} />
+      <EmailModal onSuccess={handleSuccess} />
+      <Button onClick={showDauthModal} className="w-64">
+        show modal
+      </Button>
+      <Button onClick={showSignModal} className="w-64">
+        show SignModal
+      </Button>
+      <Button onClick={showEmailModal} className="w-64">
+        show SignModal
+      </Button>
+    </div>
+  );
+
+}
+
+export default App;
+
+
 ```
-
-### Import
-
-```javascript
-import '@dauth/provider/index.css'
-import { useDauthModal, useEmailModal, useSignModal } from '@dauth/provider'
-```
+You can find more code excample in `apps/demo/src/App.tsx`
