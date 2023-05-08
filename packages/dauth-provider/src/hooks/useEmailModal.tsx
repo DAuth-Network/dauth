@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import DAuthModal from '../components/Modal/DAuthModal'
 import EmailInput from '../components/Input/EmailInput'
 import { EStep } from '../types'
@@ -10,6 +10,9 @@ import { encrypt } from '../utils/crypt'
 import { useRequest } from 'ahooks'
 import logo from "../assets/demo-logo2.png"
 import { BeatLoader } from 'react-spinners'
+interface ISignModal{
+  onSuccess: (token: string) => void
+}
 const useEmailModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const [email, setEmail] = useState('')
@@ -49,8 +52,8 @@ const useEmailModal = () => {
   const { refreshAsync } = useRequest(handleSubmit, {
     manual: true,
   })
-
-  const Modal = () => (
+ 
+  const Modal: FC<ISignModal> = ({onSuccess}) => (
     <DAuthModal modalIsOpen={modalShow} closeModal={closeModal}>
       <div className="flex flex-col items-center">
         {
@@ -62,7 +65,7 @@ const useEmailModal = () => {
       </div>
       <div className="w-full">
         {step === 0 && <EmailInput onSubmit={handleSubmit} step={EStep.default}></EmailInput>}
-        {step === 2 && <CodeIn email={email} resend={refreshAsync} />}
+        {step === 2 && <CodeIn email={email} resend={refreshAsync} onSuccess={onSuccess} />}
         {/* <div className='mt-6 flex-none'>
                     <StepLoading show={show} step={loadingStep} toggleShow={setShow} />
                 </div> */}

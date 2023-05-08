@@ -35,6 +35,7 @@ const signMethods: ISignInMethodItem[] = [
 ]
 interface IModalProps {
   googleClientId?: string,
+  onSuccess: (token: string) => void
 }
 const useSignModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
@@ -59,10 +60,10 @@ const useSignModal = () => {
     }
   }
 
-  const Modal:FC<IModalProps> = ({googleClientId}) => {
+  const Modal:FC<IModalProps> = ({googleClientId, onSuccess}) => {
     return (
       <>
-        <EmailModal />
+        <EmailModal onSuccess={onSuccess} />
         <DAuthModal modalIsOpen={modalShow} closeModal={closeModal}>
           <div className="flex flex-col items-center">
             {selectedItem ? <GoogleOAuthProvider clientId={googleClientId!}>

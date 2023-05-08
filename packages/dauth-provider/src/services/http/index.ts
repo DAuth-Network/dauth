@@ -57,7 +57,6 @@ export const dauth_exchangeKey = async (payload: exchangeKeyEequestPayload): Pro
         throw new Error(error.message)
     }
 }
-
 // Register email
 interface registerEmailEequestPayload {
     cipher_email: string

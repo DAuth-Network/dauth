@@ -4,12 +4,13 @@ import AuthCode, { AuthCodeRef } from 'react-auth-code-input'
 import { FiMail } from 'react-icons/fi'
 import { sleep } from '../../utils'
 import exchangeKey from '../../services/exchangeKey'
-import { encrypt } from '../../utils/crypt'
+import { decrypt, encrypt } from '../../utils/crypt'
 import { dauth_confirmRegisteredEmail } from '../../services/http'
 
 interface ICodeIn {
   email: string
   resend: () => Promise<void>
+  onSuccess: (token: string) => void
   show?: boolean
 }
 
@@ -26,7 +27,7 @@ const inputClasses: any = {
   [Estep.failed]: 'bg-[#3f292c] text-[#EE736F] border-[#EE736F]',
   [Estep.ready]: ' bg-[#262629] text-white border-[#383838]',
 }
-const CodeIn: FC<ICodeIn> = ({ email, resend, show = false }) => {
+const CodeIn: FC<ICodeIn> = ({ email, resend, onSuccess, show = false }) => {
   const AuthInputRef = useRef<AuthCodeRef>(null)
   const [code, setResult] = useState('')
   const [targetDate, setTargetDate] = useState(Date.now() + coldDown)
@@ -59,7 +60,9 @@ const CodeIn: FC<ICodeIn> = ({ email, resend, show = false }) => {
       const cipher_code = await encrypt(code, shareKey)
       const res = await dauth_confirmRegisteredEmail({ cipher_code, session_id })
 
-      localStorage.setItem('token', res.token)
+      const userinfo_cipher_token = res.cipher_token
+      const token = decrypt(userinfo_cipher_token, shareKey)
+      onSuccess(token!)
       await sleep(1)
       setIsLoading(false)
       setStatus(Estep.success)
