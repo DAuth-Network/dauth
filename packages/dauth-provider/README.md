@@ -5,6 +5,11 @@
 Dauth-provider provides react modal UI toolkits for integrating dauth into your website.
 
 ## example
+```
+npm i @dauth/dauth-provider 
+OR
+yarn add @dauth/dauth-provider
+```
 
 ```typescript
 import "@dauth/dauth-provider/dist/style.css";
