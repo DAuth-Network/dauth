@@ -1,10 +1,16 @@
 {
   "name": "@dauth/dauth-provider",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "keywords": [
+    "dauth",
+    "react",
+    "typescript"
+  ],
+  "homepage": "https://github.com/DAuth-Network/dauth/tree/main/packages/dauth-provider",
   "main": "./dist/dauth-provider.es.js",
   "module": "./dist/dauth-provider.es.js",
   "types": "./dist/index.d.ts",
