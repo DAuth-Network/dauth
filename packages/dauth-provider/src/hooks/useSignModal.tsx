@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import DAuthModal from '../components/Modal/DAuthModal'
 import SignInItem from '../components/signInItem'
 import { ISignInMethodItem } from '../types'
@@ -6,7 +6,6 @@ import ConnectLoading from '../components/ConnectLoding'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import GoogleOauth from '../components/OAuth/Google'
 import { useEmailModal } from '..'
-const clientID = '821654150370-regko070lj9uepk3krh09m8tpth2364h.apps.googleusercontent.com'
 const signMethods: ISignInMethodItem[] = [
   {
     name: 'email',
@@ -34,6 +33,9 @@ const signMethods: ISignInMethodItem[] = [
     description: 'www.facebook.com',
   },
 ]
+interface IModalProps {
+  googleClientId?: string,
+}
 const useSignModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const [selectedItem, setselectedItem] = useState<ISignInMethodItem>()
@@ -50,19 +52,20 @@ const useSignModal = () => {
     if (item.name === 'email') {
       closeModal()
       showEmailModal() 
-    } else {
+    } if (item.name === 'google') {
       setselectedItem(item)
+    } else {
+      // TODO: other sign in method
     }
   }
 
-
-  const Modal = () => {
+  const Modal:FC<IModalProps> = ({googleClientId}) => {
     return (
       <>
         <EmailModal />
         <DAuthModal modalIsOpen={modalShow} closeModal={closeModal}>
           <div className="flex flex-col items-center">
-            {selectedItem ? <GoogleOAuthProvider clientId={clientID}>
+            {selectedItem ? <GoogleOAuthProvider clientId={googleClientId!}>
               <ConnectLoading />
               <div className="text-2xl text-center my-4 font-semibold">Continue to sign in with Google</div>
               <div className="w-full px-4  text-sm text-white text-center my-4 mb-10">

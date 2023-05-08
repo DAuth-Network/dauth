@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
       <Modal />
-      <SignModal />
+      <SignModal googleClientId="821654150370-regko070lj9uepk3krh09m8tpth2364h.apps.googleusercontent.com"/>
       <EmailModal />
       <Button onClick={showDauthModal} className="w-64">
         show modal

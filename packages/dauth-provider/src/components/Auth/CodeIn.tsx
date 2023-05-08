@@ -76,22 +76,19 @@ const CodeIn: FC<ICodeIn> = ({ email, resend, show = false }) => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full ">
-      <div className="rounded-3xl flex justify-center items-center mb-4">
-        <FiMail size={54} />
-      </div>
-      <div className="text-center">
+      <div className="text-center my-4">
         <div className="text-xl font-semibold">Confirm verification code</div>
         <div className=" text-sm text-[#ffffff80]">We&apos;ve sent a code to</div>
         <div>{email}</div>
       </div>
       <div className="mt-6">
-        <div className={`${isLoading ? 'hidden' : 'block'}`}>
+        <div >
           <AuthCode
             ref={AuthInputRef}
             isPassword={!show}
             allowedCharacters="numeric"
             containerClassName="flex w-full justify-evenly"
-            inputClassName={`lg:w-12 lg:h-12 w-10 h-10 mx-2 last:mr-0 rounded-xl outline-none text-center border  lg:text-[22px] text-[20px] ${inputClasses[status]}`}
+            inputClassName={`lg:w-10 lg:h-10 w-10 h-10 mx-2 last:mr-0 rounded-xl outline-none text-center border  lg:text-[22px] text-[20px] ${inputClasses[status]}`}
             onChange={handleOnChange}
           />
           <div className="mt-10 text-center  text-sm font-semibold">

@@ -1,7 +1,7 @@
 {
   "name": "@dauth/dauth-provider",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"

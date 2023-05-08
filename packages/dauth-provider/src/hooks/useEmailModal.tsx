@@ -9,12 +9,15 @@ import { dauth_registerEmail } from '../services/http'
 import { encrypt } from '../utils/crypt'
 import { useRequest } from 'ahooks'
 import logo from "../assets/demo-logo2.png"
+import { BeatLoader } from 'react-spinners'
 const useEmailModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const [email, setEmail] = useState('')
   const [step, setStep] = useState(0)
-  const [, setLoadingStep] = useState(EStep.default)
+  const [loadingStep, setLoadingStep] = useState(EStep.default)
   const closeModal = () => {
+    setStep(0)
+    setLoadingStep(EStep.default)
     toggleModalShow(false)
   }
   const showModal = () => {
@@ -25,6 +28,7 @@ const useEmailModal = () => {
   // }
   const handleSubmit = async (email: string) => {
     try {
+      setStep(1)
       setLoadingStep(EStep.exchange)
       await sleep()
       const { session_id, shareKey } = await exchangeKey.exchange()
@@ -33,12 +37,11 @@ const useEmailModal = () => {
       const cipher_email = await encrypt(email, shareKey)
       setLoadingStep(EStep.hiding)
 
-      await dauth_registerEmail({ cipher_email, session_id })
+      await dauth_registerEmail({ cipher_email: cipher_email!, session_id })
       setLoadingStep(EStep.success)
       await sleep()
       setEmail(email)
-      setStep(1)
-      setLoadingStep(EStep.default)
+      setStep(2)
     } catch (error) {
       console.log(error)
     }
@@ -50,18 +53,38 @@ const useEmailModal = () => {
   const Modal = () => (
     <DAuthModal modalIsOpen={modalShow} closeModal={closeModal}>
       <div className="flex flex-col items-center">
-        <img src={logo} width={180} height={100} alt="" />
-
-        <div className="text-lg text-center my-4">Signing in with email</div>
+        {
+          step !== 1 && <img src={logo} width={180} height={100} alt="" />
+        }
+        {
+          step === 0 && <div className="text-lg text-center my-4">Signing in with email</div>
+        }
       </div>
-      <div></div>
       <div className="w-full">
         {step === 0 && <EmailInput onSubmit={handleSubmit} step={EStep.default}></EmailInput>}
-        {step === 1 && <CodeIn email={email} resend={refreshAsync} />}
+        {step === 2 && <CodeIn email={email} resend={refreshAsync} />}
         {/* <div className='mt-6 flex-none'>
                     <StepLoading show={show} step={loadingStep} toggleShow={setShow} />
                 </div> */}
       </div>
+      {
+        step === 1 && <div className='flex flex-col justify-center items-center'>
+          <BeatLoader color="#fff" />
+
+          {
+            loadingStep <= EStep.exchange &&
+            <div className="text-sm text-center my-4  text-light-grey">Establishing a secure connection with DAuth node</div>
+          }
+          {
+            loadingStep === EStep.encrypt &&
+            <div className="text-sm text-center my-4  text-light-grey">Encrypting your email</div>
+          }
+          {
+            loadingStep >= EStep.hiding &&
+            <div className="text-sm text-center my-4  text-light-grey">Hiding your identity</div>
+          }
+        </div>
+      }
     </DAuthModal>
   )
   return {
