@@ -40,11 +40,12 @@ interface IModalProps {
 const useSignModal = () => {
   const [modalShow, toggleModalShow] = useState(false)
   const [selectedItem, setselectedItem] = useState<ISignInMethodItem>()
-  const { Modal: EmailModal, showModal: showEmailModal } = useEmailModal();
+  const { Modal: EmailModal, showModal: showEmailModal, closeModal: closeEmailModal } = useEmailModal();
 
   const closeModal = () => {
     setselectedItem(undefined)
     toggleModalShow(false)
+    closeEmailModal()
   }
   const showModal = () => {
     toggleModalShow(true)
