@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dauth/core": "workspace:^",
     "@dauth/dauth-provider": "workspace:*",
+    "axios": "^1.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
