@@ -15,7 +15,7 @@ interface ResponsePayload<T> {
 }
 
 // Exchange key
-interface exchangeKeyEequestPayload {
+interface exchangeKeyRequestPayload {
     key: string
 }
 instance.interceptors.request.use(
@@ -49,7 +49,7 @@ instance.interceptors.response.use(
         return Promise.reject(error)
     }
 )
-export const dauth_exchangeKey = async (payload: exchangeKeyEequestPayload): Promise<any> => {
+export const dauth_exchangeKey = async (payload: exchangeKeyRequestPayload): Promise<any> => {
     try {
         const response: AxiosResponse = await instance.post(`/exchange_key`, payload)
         return response.data
