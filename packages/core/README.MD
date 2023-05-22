@@ -22,20 +22,27 @@ Using DAuth is simple. First, you should install it as shown above. Once install
 
 ```javascript
 const DAuth = require('@dauth/core');
-const dauth = new DAuth('node-url');
+const dauth = new DAuth('dauth node-url');
 ```
 
-To get an OTP code, you can use the `getOTP` method:
+To get an OTP code, you can use the `authOpt` method:
 
 ```javascript
     // email, account_type, request_id
-    await dauth.service.authOpt(email, 'email', 'test')
+    await dauth.service.authOpt({
+        account: email,
+        account_type: 'email',
+        request_id: 'test'
+      })
 ```
-To verify an OTP code, you can use the `verifyOTP` method:
+To verify an OTP code, you can use the `authOptConfirm` method:
 
 ```javascript
     // email, request_id
-    const result = await dauth.service.authOptConfirm(code, 'test')
+    const result = await dauth.service.authOptConfirm({
+        code,
+        request_id: 'test'
+      })
     // return 
     {
     "auth": {

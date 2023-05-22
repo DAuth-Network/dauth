@@ -88,7 +88,7 @@ export class DAuthHttpService {
         const orignalText = await decrypt(cipherText, shareKey)
         return { session_id, orignalText }
     }
-    async authOpt(account: string, account_type: TAccount_type, request_id: string): Promise<any> {
+    async authOpt({ account, account_type, request_id }: { account: string; account_type: TAccount_type; request_id: string }): Promise<any> {
         const { session_id, cipher_str: cipher_account } = await this.exchangeKeyAndEncrypt(account)
         const response: AxiosResponse = await this.instance.post(`/auth_otp`,
             {
@@ -99,7 +99,7 @@ export class DAuthHttpService {
             })
         return response.data
     }
-    async authOptConfirm(code: string, request_id: string): Promise<IOtpConfirmReturn> {
+    async authOptConfirm({ code, request_id }: { code: string; request_id: string }): Promise<IOtpConfirmReturn> {
         const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code)
         const response: AxiosResponse = await this.instance.post(`/auth_otp_confirm`,
             {
