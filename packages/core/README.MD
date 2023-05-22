@@ -1,4 +1,4 @@
-# 🚀 DAuth
+# 🚀 DAuth/core
 
 DAuth is a Github project that provides integration with the dauth node server. With DAuth, you can easily get and verify OTP (One-Time Password) codes using @dauth/core through a private channel.
 
@@ -47,9 +47,4 @@ To verify an OTP code, you can use the `verifyOTP` method:
 }
 ```
 
-If otp verify success, you can get a signature which was signed by dauth node server. You can use this signature to verify the identity of the user. 
-
-
-## 📝 License
-
-This project is [MIT](https://github.com/daferent-ltd/dauth/blob/master/LICENSE) licensed.
+If otp verify success, you will get a signature which was signed by dauth node server. You can use this signature to verify the identity of the user. 
