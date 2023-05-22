@@ -1,11 +1,13 @@
 # 🚀 DAuth/core
 
-DAuth is a Github project that provides integration with the dauth node server. With DAuth, you can easily get and verify OTP (One-Time Password) codes using @dauth/core through a private channel.
+By integrating the DAuth SDK into your platform, you can offer your users a decentralized and verifiable social authentication experience. This includes One-Time Password (OTP) methods via Email and SMS, and OAuth protocols through platforms like Google and Github.
 
 ## 🎉 Features
 
-- Integration with dauth node server
-- Get and verify OTP codes through a private channel
+- Integration with DAuth Network
+- Build encrypted channel for each data transfer, make sure all the user info is invisible to any DAuth Node
+- Get and verify OTP codes through the private channel
+- Get the idtoken through OAuth flow and generate ZK proof based on the token;
 - Easy to use and implement
 
 ## 📦 Installation
@@ -18,7 +20,7 @@ yarn add @dauth/core
 
 ## 🚀 Getting Started
 
-Using DAuth is simple. First, you should install it as shown above. Once installed, you can import it into your project and start using it:
+Once the package installed, you can import it into your project and start using it:
 
 ```javascript
 const DAuth = require('@dauth/core');
@@ -54,4 +56,8 @@ To verify an OTP code, you can use the `authOptConfirm` method:
 }
 ```
 
-If otp verify success, you will get a signature which was signed by dauth node server. You can use this signature to verify the identity of the user. 
+If otp verify success, you will get a signature which was signed by dauth node server. You can use this signature as the DAuth proof to verify the identity of the user on-chain. 
+
+### Using OAuth in DAuth
+
+Coming soon.
