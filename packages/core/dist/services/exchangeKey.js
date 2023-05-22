@@ -5,8 +5,8 @@ class ExchangeKey {
     session_id = '';
     shareKey = '';
     genKey = async () => {
-        var ec = new EC('p256');
-        var localKeyPair = ec.genKeyPair();
+        const ec = new EC('p256');
+        const localKeyPair = ec.genKeyPair();
         const localPubKey = localKeyPair.getPublic().encode('hex');
         return {
             localPubKey,

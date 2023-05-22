@@ -1,34 +1,22 @@
-import axios, {  AxiosResponse, AxiosInstance } from 'axios'
+import axios, { AxiosResponse, AxiosInstance } from 'axios'
 import * as elliptic from 'elliptic'
-import { encrypt } from '../../utils/crypto'
+import { decrypt, encrypt } from '../../utils/crypto'
+import { IOtpConfirmReturn, TAccount_type } from '../../types'
 
 const EC = elliptic.ec
-interface RequestPayload {
-    [key: string]: any
-}
-
-interface ResponsePayload<T> {
-    data: T
-    status: string
-}
-
-// Exchange key
-interface exchangeKeyRequestPayload {
-    key: string
-}
-
 export class DAuthHttpService {
     private instance: AxiosInstance
     private session_id = ''
     private shareKey = ''
 
-    constructor(baseURL = "https://dev-api.dauth.network/dauth/sdk/v1/") {
+    constructor(baseURL: string) {
         this.instance = axios.create({
             baseURL: baseURL,
         })
         this.instance.interceptors.request.use(
             config => {
                 config.data = {
+                    client_id: 'demo',
                     ...config.data,
 
                 }
@@ -38,7 +26,7 @@ export class DAuthHttpService {
 
         this.instance.interceptors.response.use(
             (response) => {
-                if (response.data.status !== 'fail') {
+                if (response.data.status === 'success') {
                     return response
                 } else {
                     return Promise.reject(response.data.error_msg)
@@ -71,9 +59,8 @@ export class DAuthHttpService {
             return { session_id: this.session_id, shareKey: this.shareKey }
         }
         const { localPubKey, localKeyPair } = await this.genKey()
-        const res = await this.exchangeKey({ key: localPubKey })
+        const { session_id, key } = await this.exchangeKey(localPubKey)
 
-        const { session_id, key } = res
         const ec = new EC('p256')
         const remoteKeyObj = ec.keyFromPublic(key, 'hex')
         const bn = localKeyPair.derive(remoteKeyObj.getPublic())
@@ -83,9 +70,9 @@ export class DAuthHttpService {
         this.shareKey = shareKey
         return { session_id, shareKey }
     }
-    exchangeKey = async (payload: exchangeKeyRequestPayload): Promise<any> => {
+    exchangeKey = async (key: string): Promise<{ key: string, session_id: string }> => {
         try {
-            const response: AxiosResponse = await this.instance.post(`/exchange_key`, payload)
+            const response: AxiosResponse = await this.instance.post(`/exchange_key`, { key })
             return response.data
         } catch (error: any) {
             throw new Error(error.message)
@@ -96,22 +83,31 @@ export class DAuthHttpService {
         const cipher_str = await encrypt(rawText, shareKey)
         return { session_id, cipher_str }
     }
-    authEmail = async (code: string): Promise<any> => {
-        try {
-            const { session_id, cipher_str: cipher_email } = await this.exchangeKeyAndEncrypt(code)
-            const response: AxiosResponse = await this.instance.post(`/auth_email`, { cipher_email, session_id })
-            return response.data
-        } catch (error: any) {
-            throw new Error(error.message)
-        }
+    async exchangeKeyAndDecrypt(cipherText: string) {
+        const { session_id, shareKey } = await this.createChanel()
+        const orignalText = await decrypt(cipherText, shareKey)
+        return { session_id, orignalText }
     }
-    async confirmAuthEmail(code: string): Promise<any> {
-        try {
-            const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code)
-            const response: AxiosResponse = await this.instance.post(`/auth_email_confirm`, { cipher_code, session_id })
-            return response.data
-        } catch (error: any) {
-            throw new Error(error.message)
-        }
+    async authOpt(account: string, account_type: TAccount_type, request_id: string): Promise<any> {
+        const { session_id, cipher_str: cipher_account } = await this.exchangeKeyAndEncrypt(account)
+        const response: AxiosResponse = await this.instance.post(`/auth_otp`,
+            {
+                cipher_account,
+                session_id,
+                account_type,
+                request_id
+            })
+        return response.data
+    }
+    async authOptConfirm(code: string, request_id: string): Promise<IOtpConfirmReturn> {
+        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code)
+        const response: AxiosResponse = await this.instance.post(`/auth_otp_confirm`,
+            {
+                cipher_code,
+                session_id,
+                request_id
+            })
+        const orignalText = decrypt(response.data.data, this.shareKey)
+        return JSON.parse(orignalText!)
     }
 }

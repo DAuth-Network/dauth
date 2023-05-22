@@ -68,13 +68,3 @@ export function hashStr(cond: string) {
     md.update(cond)
     return md.digest().toHex()
 }
-export async function hashAndEncrypt(rawText: string, key: string) {
-    const hash = hashStr(rawText)
-    const encrypted = await encrypt(rawText, key)
-    return encrypted
-}
-export async function exchangeKeyAndEncrypt(rawText: string) {
-    const { session_id, shareKey } = await exchangeKey.exchange()
-    const cipher_code = await encrypt(rawText, shareKey)
-    return {session_id, cipher_code}
-}

@@ -21,9 +21,8 @@ interface exchangeKeyRequestPayload {
 instance.interceptors.request.use(
     config => {
         config.data = {
-            ...config.data,
             client_id: 'demo',
-            
+            ...config.data,
         }
         return config;
     }

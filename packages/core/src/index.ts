@@ -1,13 +1,10 @@
 import { DAuthHttpService } from "./services/http"
 
-class DAuth {
+export default class DAuth {
     baseURL: string
-    httpService: DAuthHttpService
-    constructor(baseURL = '') { 
+    service: DAuthHttpService
+    constructor(baseURL = 'https://dev-api.dauth.network/dauth/sdk/v1.1/') { 
         this.baseURL = baseURL
-        this.httpService = new DAuthHttpService(baseURL)
+        this.service = new DAuthHttpService(baseURL)
     }
-    
-
-
 }
