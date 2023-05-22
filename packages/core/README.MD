@@ -18,7 +18,7 @@ yarn add @dauth/core
 
 ## 🚀 Getting Started
 
-Using DAuth is simple. First, you should install it as shown above. Once installed, you can import it into your project and start using it:
+Once the package installed, you can import it into your project and start using it:
 
 ```javascript
 const DAuth = require('@dauth/core');
@@ -34,7 +34,7 @@ To get an OTP code, you can use the `getOTP` method:
 To verify an OTP code, you can use the `verifyOTP` method:
 
 ```javascript
-    // email, request_id
+    // otp, request_id
     const result = await dauth.service.authOptConfirm(code, 'test')
     // return 
     {
@@ -47,4 +47,4 @@ To verify an OTP code, you can use the `verifyOTP` method:
 }
 ```
 
-If otp verify success, you will get a signature which was signed by dauth node server. You can use this signature to verify the identity of the user. 
+If otp verify success, you will get a signature which was signed by dauth node server. You can use this signature as the DAuth proof to verify the identity of the user on-chain. 
