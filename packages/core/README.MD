@@ -66,7 +66,7 @@ Upon successful One-Time Password (OTP) verification within the DAuth Network, a
  we recommand you to use [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google) to get the authorization code. 
  You need to apply google `client_id` and dauth `client_id` by  filling a google form and provide your origin and authorized redirect URIs.
 
-2. Once you get the authorization code, you can use `dauth.service.authOAuth` to get the idtoken and signature.
+2. Once you get the authorization code, you can use `authOAuth`:
 ```javascript
     // code, request_id, auth_type
     const result = await dauth.service.authOauth({
