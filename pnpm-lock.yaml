@@ -40,6 +40,9 @@ importers:
       '@dauth/dauth-provider':
         specifier: workspace:*
         version: link:../../packages/dauth-provider
+      '@react-oauth/google':
+        specifier: ^0.11.0
+        version: 0.11.0(react-dom@18.2.0)(react@18.2.0)
       axios:
         specifier: ^1.3.5
         version: 1.3.5

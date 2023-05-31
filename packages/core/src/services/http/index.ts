@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios'
 import * as elliptic from 'elliptic'
 import { decrypt, encrypt } from '../../utils/crypto'
-import { IOtpConfirmReturn, TAccount_type } from '../../types'
+import { IOtpConfirmReturn, TAccount_type, TOAauth_type } from '../../types'
 
 const EC = elliptic.ec
 export class DAuthHttpService {
@@ -106,6 +106,18 @@ export class DAuthHttpService {
                 cipher_code,
                 session_id,
                 request_id
+            })
+        const orignalText = decrypt(response.data.data, this.shareKey)
+        return JSON.parse(orignalText!)
+    }
+    async authOauth({ token, request_id, auth_type }: { token: string; request_id: string, auth_type: TOAauth_type }): Promise<IOtpConfirmReturn> {
+        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(token)
+        const response: AxiosResponse = await this.instance.post(`/auth_oauth`,
+            {
+                cipher_code,
+                session_id,
+                request_id,
+                auth_type
             })
         const orignalText = decrypt(response.data.data, this.shareKey)
         return JSON.parse(orignalText!)

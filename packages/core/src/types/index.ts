@@ -7,3 +7,4 @@ export interface IOtpConfirmReturn {
     signature: string
 }
 export type TAccount_type = 'email' | 'sms'
+export type TOAauth_type = 'google' | 'github'

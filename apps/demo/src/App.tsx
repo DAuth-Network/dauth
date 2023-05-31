@@ -5,7 +5,9 @@ import ReactJson from 'react-json-view'
 import DAuth from "@dauth/core";
 import { useState } from "react";
 import { IOtpConfirmReturn } from "@dauth/core/dist/types";
-const dauth = new DAuth('https://dev-api.dauth.network/dauth/sdk/v1.1/')
+import { GoogleLoginCom } from "./components/GoogleLogin";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+const dauth = new DAuth('https://demo-api.dauth.network/dauth/sdk/v1.1/')
 function App() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -13,6 +15,7 @@ function App() {
   const [emailOtp, setEmailOtp] = useState('')
   const [emailAuthRes, setEmailAuthRes] = useState<IOtpConfirmReturn>()
   const [smsAuthRes, setSmsAuthRes] = useState<IOtpConfirmReturn>()
+  const [oAuthRes, setOAuthRes] = useState<IOtpConfirmReturn>()
   const authEmailOtp = async () => {
     try {
       await dauth.service.authOpt({
@@ -59,10 +62,23 @@ function App() {
       console.log(error)
     }
   }
+  const authGoogleOAuth = async (token: string) => {
+    try {
+      const res = await dauth.service.authOauth({
+        token,
+        request_id: 'test',
+        auth_type: 'google'
+      })
+      console.log(res)
+      setOAuthRes(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="App p-10">
-      <h2 className="text-xl pb-4">@DAuth/core example</h2> 
+      <h2 className="text-xl pb-4">@DAuth/core example</h2>
       <div className=" bg-red-50 p-4 w-1/2">
         <div className="text-xl">
           Email otp example
@@ -83,7 +99,7 @@ function App() {
         </div>
         <div>
           <div>
-            {emailAuthRes && <ReactJson src={emailAuthRes!} />}
+            {emailAuthRes && <ReactJson displayDataTypes={false} collapsed src={emailAuthRes!} />}
           </div>
         </div>
       </div>
@@ -107,11 +123,20 @@ function App() {
         </div>
         <div>
           <div>
-            {smsAuthRes && <ReactJson src={smsAuthRes!} />}
+            {smsAuthRes && <ReactJson displayDataTypes={false} src={smsAuthRes!} />}
           </div>
         </div>
       </div>
-      
+      <div className=" bg-red-50 p-4 w-1/2 mt-10">
+        <div className="text-xl py-4">
+          Google oauth example
+        </div>
+        <GoogleOAuthProvider clientId="821654150370-q5hjra4s693p61l3giv7halqf42h37o1.apps.googleusercontent.com">
+          <GoogleLoginCom onLoginSuccess={authGoogleOAuth}></GoogleLoginCom>
+        </GoogleOAuthProvider>
+        {oAuthRes && <ReactJson displayDataTypes={false} quotesOnKeys={false}  src={oAuthRes!} />}
+      </div>
+
     </div>
   );
 
