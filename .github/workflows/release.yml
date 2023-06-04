@@ -4,7 +4,7 @@ name: Release
 on:
   push:
     branches:
-      - release
+      - main
 
 jobs:
   release:
@@ -26,7 +26,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm -r build
+        run: pnpm --filter dauth-provider  build
 
       - name: Release
         uses: changesets/action@v1

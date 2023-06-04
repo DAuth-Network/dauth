@@ -9,9 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dauth/core": "workspace:^",
     "@dauth/dauth-provider": "workspace:*",
+    "@react-oauth/google": "^0.11.0",
+    "axios": "^1.3.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-json-view": "^1.21.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
