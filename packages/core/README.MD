@@ -90,7 +90,7 @@ We recommand you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
     /* example return 
         {
     "auth": {
-        "account": "f69fd6bd0e98a7c2792e1909cedf21455f9629940c5d8fcaec8aa3e7fd5de767",
+        "account": "f69fd6bd0e98a7c2792e1909c********5d8fcaec8aa3e7fd5de767",
         "auth_type": "google",
         "request_id": "The id related to the TX or userOp"
     },

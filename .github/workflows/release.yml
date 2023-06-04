@@ -1,38 +1,38 @@
----
-name: Release
-
+name: Changesets
 on:
   push:
     branches:
       - main
-
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
 jobs:
-  release:
-    name: Release
+  version:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout release branch
+      - name: checkout code repository
         uses: actions/checkout@v3
         with:
-          ref: release
-
-      - name: Setup node.js 18
+          fetch-depth: 0
+      - name: setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm --filter dauth-provider  build
-
-      - name: Release
+          node-version: 14
+      - name: install pnpm
+        run: npm i pnpm@latest -g
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+      - name: setup pnpm config
+        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - name: install dependencies
+        run: pnpm install
+      - name: create and publish versions
         uses: changesets/action@v1
         with:
-          title: "chore: release"
-          commit: "chore: release"
+          version: pnpm ci:version
+          commit: "chore: update versions"
+          title: "chore: update versions"
           publish: pnpm ci:publish
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
