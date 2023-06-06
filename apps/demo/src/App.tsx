@@ -18,7 +18,7 @@ function App() {
   const [oAuthRes, setOAuthRes] = useState<IOtpConfirmReturn>()
   const authEmailOtp = async () => {
     try {
-      await dauth.service.authOpt({
+      await dauth.service.sendOtp({
         account: email,
         account_type: 'email',
         request_id: 'test'
