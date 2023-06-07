@@ -64,7 +64,7 @@ export class DAuthHttpService {
         const ec = new EC('p256')
         console.log("", `0x${key}`)
 
-        const remoteKeyObj = ec.keyFromPublic(`0x${key}`, 'hex')
+        const remoteKeyObj = ec.keyFromPublic(`04${key}`, 'hex')
         const bn = localKeyPair.derive(remoteKeyObj.getPublic())
         const origShareKey = bn.toString(16)
         const shareKey = origShareKey.slice(origShareKey.length / 2)
