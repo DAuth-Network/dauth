@@ -7,4 +7,9 @@ export interface IOtpConfirmReturn {
     signature: string
 }
 export type TAccount_type = 'email' | 'sms'
-export type TOAauth_type = 'google' | 'github'
+export type TOAuth_type = 'google' | 'github'
+export type TSign_mode = 'jwt' | 'proof'
+export interface IDauthConfig {
+    baseURL: string,
+    clientID: string,
+}
