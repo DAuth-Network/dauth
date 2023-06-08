@@ -127,7 +127,7 @@ We recommand you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
                 "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4P57B3YDkXCkYo32Ts5PGgwxh3ayfjGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
         }
     }
-}
+    } */
 ```
 
 
