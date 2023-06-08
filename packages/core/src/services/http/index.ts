@@ -55,21 +55,18 @@ export class DAuthHttpService {
             localKeyPair,
         }
     }
-    private createChanel = async () => {
-        if (this.session_id && this.shareKey) {
+    private createChanel = async (fresh = true) => {
+        if (!fresh) {
             return { session_id: this.session_id, shareKey: this.shareKey }
         }
         const { localPubKey, localKeyPair } = await this.genKey()
         const { session_id, key } = await this.exchangeKey(localPubKey)
-        console.log("session_id, key", session_id, key)
         const ec = new EC('p256')
-        console.log("", `0x${key}`)
 
         const remoteKeyObj = ec.keyFromPublic(`04${key}`, 'hex')
         const bn = localKeyPair.derive(remoteKeyObj.getPublic())
         const origShareKey = bn.toString(16)
         const shareKey = origShareKey.slice(origShareKey.length / 2)
-        console.log(shareKey, origShareKey)
         this.session_id = session_id
         this.shareKey = shareKey
         return { session_id, shareKey }
@@ -82,8 +79,8 @@ export class DAuthHttpService {
             throw new Error(error.message)
         }
     }
-    async exchangeKeyAndEncrypt(rawText: string) {
-        const { session_id, shareKey } = await this.createChanel()
+    async exchangeKeyAndEncrypt(rawText: string, fresh = true) {
+        const { session_id, shareKey } = await this.createChanel(fresh)
         const cipher_str = await encrypt(rawText, shareKey)
         return { session_id, cipher_str }
     }
@@ -123,7 +120,7 @@ export class DAuthHttpService {
         return JSON.parse(originalText!)
     }
     async authOptConfirm({ code, request_id, mode }: { code: string; request_id: string, mode: TSign_mode }): Promise<any> {
-        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code)
+        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
                 cipher_code,

@@ -7,7 +7,10 @@ import { useState } from "react";
 import { IOtpConfirmReturn, TSign_mode } from "@dauth/core/dist/types";
 import { GoogleLoginCom } from "./components/GoogleLogin";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-const dauth = new DAuth('https://demo-api.dauth.network/dauth/sdk/v1.1/')
+const dauth = new DAuth({
+  baseURL: 'https://demo-api.dauth.network/dauth/sdk/v1.1/',
+  clientID: 'demo',
+})
 function App() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -85,9 +88,9 @@ function App() {
         <div>
           <div className=" bg-fuchsia-400 p-4 my-4">
             <div>
-               Global setting
+              Global setting
             </div>
-            
+
             <div>
               Sign mode: (jwt | proof) <input className=" py-2 border-2 w-56 rounded-sm	" value={mode} onChange={(e) => { setMode(e.target.value) }} type='text' />
             </div>

@@ -27,7 +27,10 @@ After installing the package, import it into your project and begin to utilize i
 
 ```javascript
 const DAuth = require('@dauth/core');
-const dauth = new DAuth('dauth node-url');
+const dauth = new DAuth({
+  baseURL: 'dauth node-url',
+  clientID: 'demo',
+})
 ```
 
 ### Leveraging OPT Authentication with DAuth
@@ -39,29 +42,43 @@ const dauth = new DAuth('dauth node-url');
 
 ```javascript
     // account, account_type, request_id
-    await dauth.service.authOpt({
+      await dauth.service.sendOtp({
         account: account,
         account_type: 'email',
-        request_id: 'The id related to the TX or userOp'
+        request_id: request_id: 'The id related to the TX or userOp'
       })
 ```
 
 2. The `authOptConfirm` method can be used to verify an OTP code and obtain the DAuth proof.
 
 ```javascript
-    // code, request_id
+    // code,
+    // request_id
+    // mode: jwt | proof
     const result = await dauth.service.authOptConfirm({
         code,
-        request_id: 'test'
+        request_id: 'The id related to the TX or userOp',
+        mode
       })
     /* example return 
     {
-    "auth": {
-        "account": "8f20fae59e796d5b5249......aea2c7fc6200dc5fbd5a",
+        "mode": "proof",
+        "data": {
+        "auth": {
+        "account": "5146a933b8879b3******ee2f4b18573d0ccece0453de374589",
         "auth_type": "email",
         "request_id": "test"
-    },
-    "signature": "49fc6da1f3664fe66ef5a4311584d0b5a6.....cb44a3ba84729dd2c08ac05edd01dc41501d5d1a96631c"
+        },
+        "signature": "717a84b617e9ae8c4d002e95073cfdc07e1c388***5b93658ea94f32945064dc0932ddeebb0d0fa17408b4e62aeea355304b6201b"
+        }
+    }
+    or 
+    {
+        {
+            "mode": "jwt",
+                "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4P57B3YDkXCkYo32Ts5PGgwxh3ayfjGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
+        }
+    }
     */
 }
 ```
@@ -81,20 +98,34 @@ We recommand you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
 2. Upon receiving the authorization code, the `authOAuth` method can be used to procure the DAuth proof.
 
 ```javascript
-    // code, request_id, auth_type
+    // code, 
+    // request_id,
+    // auth_type
+    // mode: jwt | proof
     const result = await dauth.service.authOauth({
         token: authorization_code,
         request_id: 'test',
         auth_type: 'google'
+        mode
       })
     /* example return 
+       {
+        "mode": "proof",
+        "data": {
+            "auth": {
+            "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
+            "auth_type": "google",
+            "request_id": "test"
+        },
+        "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
+        }
+    }
+    or 
+    {
         {
-    "auth": {
-        "account": "f69fd6bd0e98a7c2792e1909c********5d8fcaec8aa3e7fd5de767",
-        "auth_type": "google",
-        "request_id": "The id related to the TX or userOp"
-    },
-    "signature": "a5186118ad83eb466e60b37dcc97e159272335********052c3253aa60ac2c63fd1c"
+            "mode": "jwt",
+                "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4P57B3YDkXCkYo32Ts5PGgwxh3ayfjGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
+        }
     }
 }
 ```
