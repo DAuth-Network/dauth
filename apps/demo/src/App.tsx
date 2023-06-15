@@ -5,8 +5,10 @@ import ReactJson from 'react-json-view'
 import DAuth from "@dauth/core";
 import { useState } from "react";
 import { IOtpConfirmReturn, TSign_mode } from "@dauth/core/dist/types";
-import { GoogleLoginCom } from "./components/GoogleLogin";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLoginCom from "./components/GoogleLogin";
+import AppleLogin from "react-apple-login";
+
 const dauth = new DAuth({
   baseURL: 'https://demo-api.dauth.network/dauth/sdk/v1.1/',
   clientID: 'demo',
@@ -66,12 +68,29 @@ function App() {
       console.log(error)
     }
   }
+
   const authGoogleOAuth = async (token: string) => {
     try {
       const res = await dauth.service.authOauth({
         token,
         request_id: 'test',
         auth_type: 'google',
+        mode
+      })
+      console.log(res)
+      setRes(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const authAppleOAuth = async (response: any) => {
+    const code = response.code
+    try {
+      const res = await dauth.service.authOauth({
+        token: code,
+        request_id: 'test',
+        auth_type: 'apple',
         mode
       })
       console.log(res)
@@ -143,7 +162,21 @@ function App() {
               <GoogleLoginCom onLoginSuccess={authGoogleOAuth}></GoogleLoginCom>
             </GoogleOAuthProvider>
           </div>
+          <div className=" bg-red-50 p-4  mt-10">
+            <div className="text-xl py-4">
+              Apple signin  example
+            </div>
+            <AppleLogin
+              callback={authAppleOAuth}
+              clientId="com.duath.network.oauth"
+              scope="email"
+              responseMode="query"
+              responseType="code"
+              redirectURI="https://demo-api.dauth.network/" />
+          </div>
         </div>
+
+
         <div className="p-10 w-3/5">
           {res && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={res!} />}
         </div>
