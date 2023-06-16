@@ -58,7 +58,7 @@ const dauth = new DAuth({
     const result = await dauth.service.authOptConfirm({
         code,
         request_id: 'The id related to the TX or userOp',
-        mode
+        mode: 'jwt' // or 'proof'
       })
     /* example return 
     {
@@ -103,8 +103,8 @@ We recommend you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
     const result = await dauth.service.authOauth({
         token: authorization_code,
         request_id: 'test',
-        auth_type: 'google'
-        mode
+        auth_type: 'google',
+        mode: 'jwt' // or 'proof'
       })
     /* example return 
        {
@@ -146,8 +146,8 @@ We recommend you to use [react-apple-login](https://www.npmjs.com/package/react-
     const result = await dauth.service.authOauth({
         token: authorization_code,
         request_id: 'test',
-        auth_type: 'apple'
-        mode
+        auth_type: 'apple',
+        mode: 'jwt' // or 'proof'
       })
     /* example return 
        {
