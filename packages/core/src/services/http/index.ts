@@ -114,19 +114,20 @@ export class DAuthHttpService {
                 cipher_account,
                 session_id,
                 request_id,
-                account_type
+                account_type,
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return JSON.parse(originalText!)
     }
-    async authOptConfirm({ code, request_id, mode }: { code: string; request_id: string, mode: TSign_mode }): Promise<any> {
+    async authOptConfirm({ code, request_id, mode, auth_type }: { code: string; request_id: string, mode: TSign_mode, auth_type?: string }): Promise<any> {
         const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
                 cipher_code,
                 session_id,
                 request_id,
-                sign_mode: mode
+                sign_mode: mode,
+                auth_type
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
