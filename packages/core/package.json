@@ -1,7 +1,13 @@
 {
   "name": "@dauth/core",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "",
+  "github": "",
+  "homepage": "https://github.com/DAuth-Network/dauth/tree/main/packages/core",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DAuth-Network/dauth/tree/main/packages/core"
+  },
   "files": [
     "dist"
   ],

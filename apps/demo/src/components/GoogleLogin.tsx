@@ -6,7 +6,7 @@ import { FC } from 'react';
 interface IGoogleLoginComProps {
     onLoginSuccess: (token: string) => void
 }
-export const GoogleLoginCom: FC<IGoogleLoginComProps> = ({ onLoginSuccess }) => {
+const GoogleLoginCom: FC<IGoogleLoginComProps> = ({ onLoginSuccess }) => {
     const login = useGoogleLogin({
         onSuccess: onSuccess,
         flow: 'auth-code',
@@ -22,3 +22,4 @@ export const GoogleLoginCom: FC<IGoogleLoginComProps> = ({ onLoginSuccess }) => 
         </Button>
     )
 }
+export default GoogleLoginCom
