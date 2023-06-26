@@ -10,7 +10,7 @@ import GoogleLoginCom from "./components/GoogleLogin";
 import AppleLogin from "react-apple-login";
 
 const dauth = new DAuth({
-  baseURL: 'https://demo-api.dauth.network/dauth/sdk/v1.1/',
+  baseURL: 'https://dev-api.dauth.network/dauth/sdk/v1.1/',
   clientID: 'demo',
 })
 function App() {
@@ -48,7 +48,7 @@ function App() {
         code: emailOtp,
         request_id: 'test',
         mode: mode,
-        auth_type: 'email'
+        auth_type: 'email'!
       })
       console.log(res)
       setRes(res)
@@ -92,7 +92,7 @@ function App() {
       const res = await dauth.service.authOauth({
         token: code,
         request_id: 'test',
-        auth_type: 'apple' as any,
+        auth_type: 'apple',
         mode
       })
       console.log(res)

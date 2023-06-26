@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios'
 import * as elliptic from 'elliptic'
 import { decrypt, encrypt } from '../../utils/crypto'
-import { IDauthConfig, IOtpConfirmReturn, TAccount_type, TOAuth_type, TSign_mode } from '../../types'
+import { IDauthConfig, TAccount_type, TAuth_type, TSign_mode } from '../../types'
 
 const EC = elliptic.ec
 export class DAuthHttpService {
@@ -91,7 +91,7 @@ export class DAuthHttpService {
     }
 
 
-    async authOauth({ token, request_id, auth_type, mode }: { token: string; request_id: string, auth_type: TOAuth_type, mode: TSign_mode }): Promise<any> {
+    async authOauth({ token, request_id, auth_type, mode }: { token: string; request_id: string, auth_type: TAuth_type, mode: TSign_mode }): Promise<any> {
         const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(token)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
@@ -104,22 +104,22 @@ export class DAuthHttpService {
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
             mode,
-            data: mode === 'jwt' ? originalText: JSON.parse(originalText!)
+            data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
         }
     }
-    async sendOtp({ account, request_id, account_type }: { account: string; account_type: TAccount_type, request_id?: string, }): Promise<IOtpConfirmReturn> {
+    async sendOtp({ account, request_id, account_type }: { account: string; account_type: TAccount_type, request_id?: string, }): Promise<boolean> {
         const { session_id, cipher_str: cipher_account } = await this.exchangeKeyAndEncrypt(account)
-        const response: AxiosResponse = await this.instance.post(`/send_otp`,
+        await this.instance.post(`/send_otp`,
             {
                 cipher_account,
                 session_id,
                 request_id,
                 account_type,
             })
-        const originalText = decrypt(response.data.data, this.shareKey)
-        return JSON.parse(originalText!)
+        return true
+
     }
-    async authOptConfirm({ code, request_id, mode, auth_type }: { code: string; request_id: string, mode: TSign_mode, auth_type?: string }): Promise<any> {
+    async authOptConfirm({ code, request_id, mode, auth_type }: { code: string; request_id: string, mode: TSign_mode, auth_type?: TAuth_type }): Promise<any> {
         const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
@@ -132,7 +132,7 @@ export class DAuthHttpService {
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
             mode,
-            data: mode === 'jwt' ? originalText: JSON.parse(originalText!)
+            data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
         }
     }
 }
