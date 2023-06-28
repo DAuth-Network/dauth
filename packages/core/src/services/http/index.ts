@@ -1,9 +1,11 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios'
-import * as elliptic from 'elliptic'
 import { decrypt, encrypt } from '../../utils/crypto'
 import { IDauthConfig, TAccount_type, TAuth_type, TSign_mode } from '../../types'
+import { genKey } from '../../utils/curve'
+import { p256 } from '@noble/curves/p256';
+import * as utils from '@noble/curves/abstract/utils';
 
-const EC = elliptic.ec
+
 export class DAuthHttpService {
     private instance: AxiosInstance
     private session_id = ''
@@ -26,7 +28,6 @@ export class DAuthHttpService {
 
         this.instance.interceptors.response.use(
             (response) => {
-                console.log(response)
                 if (response.data.status === 'success') {
                     return response
                 } else {
@@ -34,39 +35,21 @@ export class DAuthHttpService {
                 }
             },
             (error) => {
-                if (error.response) {
-                    console.log('Status:', error.response.status)
-                    console.log('Data:', error.response.data)
-                } else if (error.request) {
-                    console.log('No response from server.')
-                } else {
-                    console.log('Error:', error.message)
-                }
                 return Promise.reject(error)
             }
         )
     }
-    private genKey = async () => {
-        const ec = new EC('p256')
-        const localKeyPair = ec.genKeyPair()
-        const localPubKey = (localKeyPair.getPublic() as any).encode('hex')
-        return {
-            localPubKey,
-            localKeyPair,
-        }
-    }
+
     private createChanel = async (fresh = true) => {
         if (!fresh) {
             return { session_id: this.session_id, shareKey: this.shareKey }
         }
-        const { localPubKey, localKeyPair } = await this.genKey()
+        const { localPubKey, localPriv } = await genKey()
         const { session_id, key } = await this.exchangeKey(localPubKey)
-        const ec = new EC('p256')
 
-        const remoteKeyObj = ec.keyFromPublic(`04${key}`, 'hex')
-        const bn = localKeyPair.derive(remoteKeyObj.getPublic())
-        const origShareKey = bn.toString(16)
-        const shareKey = origShareKey.slice(origShareKey.length / 2)
+        const origShareKey = p256.getSharedSecret(localPriv, `04${key}`).slice(1)
+        const originalText = utils.bytesToHex(origShareKey)
+        const shareKey = originalText.slice(originalText.length / 2)
         this.session_id = session_id
         this.shareKey = shareKey
         return { session_id, shareKey }

@@ -1,57 +1,49 @@
-import * as  forge from 'node-forge'
+import { cipher, util, md } from 'node-forge'
 
 export async function encrypt(rawText: string, key: string) {
     console.log("encrypt content", rawText, " with ", key);
     if (key === "") {
-        alert("Secure Channel to Dauth Node is not setup correctly. Please refresh page and try again.");
-        return;
+        Promise.reject("Secure Channel to Dauth Node is not setup correctly. Please refresh page and try again.")
     }
     try {
-        console.log("prepare key");
-        var aesKey = forge.util.hexToBytes(key);
-        var cipher = forge.cipher.createCipher('AES-GCM', aesKey);
+        const aesKey = util.hexToBytes(key);
+        const ciphers = cipher.createCipher('AES-GCM', aesKey);
         const iv = new Uint8Array(12) as any;
-        console.log("prepare iv");
-        cipher.start({
+        ciphers.start({
             iv: iv,
             tagLength: 128
         });
-        console.log(cipher);
-        cipher.update(forge.util.createBuffer(rawText, 'raw'));
+        ciphers.update(util.createBuffer(rawText, 'raw'));
         console.log("finish.");
-        cipher.finish();
-        const a = cipher.output.toHex();
-        var tag = cipher.mode.tag;
-        console.log("encrypted ", a);
-        cipher.output.getBytes();
+        ciphers.finish();
+        const a = ciphers.output.toHex();
+        const tag = ciphers.mode.tag;
+        ciphers.output.getBytes();
         return tag.toHex() + a;
     } catch (err) {
-        console.log("failing");
-        console.log("error happening ", err);
-        return "";
+
+        Promise.reject("Secure Channel to Dauth Node is not setup correctly. Please refresh page and try again.")
     }
 }
 export function decrypt(secretText: string, key: string) {
     //TODO: check if secretText is hex or binary
-    console.log("decrypt content ", secretText, " with ", key);
     if (key === "") {
-        alert("Secure Channel to Dauth Node is not setup correctly. Please refresh page and try again.");
-        return;
+        Promise.reject("Secure Channel to Dauth Node is not setup correctly. Please refresh page and try again.")
     }
     try {
-        var aesKey = forge.util.hexToBytes(key);
+        const aesKey = util.hexToBytes(key);
         // the first 16 bytes are for tag
-        var tag = forge.util.hexToBytes(secretText.slice(0,32)) as any;
+        const tag = util.hexToBytes(secretText.slice(0, 32)) as any;
         // the remaining bytes are cipher_text 
-        var rawText = forge.util.hexToBytes(secretText.slice(32));
-        var decipher = forge.cipher.createDecipher('AES-GCM', aesKey);
-        var iv =  new Uint8Array(12) as any;
+        const rawText = util.hexToBytes(secretText.slice(32));
+        const decipher = cipher.createDecipher('AES-GCM', aesKey);
+        const iv = new Uint8Array(12) as any;
         decipher.start({
             iv: iv,
             tagLength: 128,
             tag: tag
         });
-        decipher.update(forge.util.createBuffer(rawText, 'raw'));
+        decipher.update(util.createBuffer(rawText, 'raw'));
         decipher.finish();
         const a = decipher.output.toHex();
         console.log("decrypted hex ", a);
@@ -59,12 +51,11 @@ export function decrypt(secretText: string, key: string) {
         console.log("decrypted output ", o);
         return o;
     } catch (err) {
-        console.log(err);
-        return "";
+        Promise.reject("Secure Channel to Dauth Node is not setup correctly. Please refresh page and try again.")
     }
 }
 export function hashStr(cond: string) {
-    var md = forge.md.sha256.create()
-    md.update(cond)
-    return md.digest().toHex()
+    var mdStr = md.sha256.create()
+    mdStr.update(cond)
+    return mdStr.digest().toHex()
 }
