@@ -55,10 +55,12 @@ const dauth = new DAuth({
     // code,
     // request_id
     // mode: jwt | proof
+    // auth_type: "email" | "sms"
     const result = await dauth.service.authOptConfirm({
         code,
         request_id: 'The id related to the TX or userOp',
-        mode: 'jwt' // or 'proof'
+        mode: 'jwt' // or 'proof',
+        auth_type: "email"
       })
     /* example return 
     {
