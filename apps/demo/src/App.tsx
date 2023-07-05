@@ -2,9 +2,8 @@ import "@dauth/dauth-provider/dist/style.css";
 import "@dauth/dauth-provider/dist/tailwind.css";
 import { Button } from "@dauth/dauth-provider";
 import ReactJson from 'react-json-view'
-import DAuth from "@dauth/core";
+import DAuth, { IOtpConfirmReturn, TSign_mode }  from "@dauth/core";
 import { useState } from "react";
-import { IOtpConfirmReturn, TSign_mode } from "@dauth/core/dist/types";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLoginCom from "./components/GoogleLogin";
 import AppleLogin from "react-apple-login";
@@ -76,7 +75,7 @@ function App() {
       const res = await dauth.service.authOauth({
         token,
         request_id: 'test',
-        auth_type: 'google',
+        id_type: 'google',
         mode
       })
       console.log(res)
@@ -92,7 +91,7 @@ function App() {
       const res = await dauth.service.authOauth({
         token: code,
         request_id: 'test',
-        auth_type: 'apple',
+        id_type: 'apple',
         mode
       })
       console.log(res)
