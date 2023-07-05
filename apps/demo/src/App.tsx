@@ -24,7 +24,7 @@ function App() {
     try {
       await dauth.service.sendOtp({
         account: email,
-        account_type: 'email',
+        id_type: 'mailto',
         request_id: 'test'
       })
     } catch (error) {
@@ -35,7 +35,7 @@ function App() {
     try {
       await dauth.service.sendOtp({
         account: phone,
-        account_type: 'sms',
+        id_type: 'tel',
         request_id: 'test'
       })
     } catch (error) {
@@ -48,7 +48,7 @@ function App() {
         code: emailOtp,
         request_id: 'test',
         mode: mode,
-        auth_type: 'email'!
+        id_type: 'mailto'
       })
       console.log(res)
       setRes(res)
@@ -62,7 +62,7 @@ function App() {
         code: smsOtp,
         request_id: 'test',
         mode,
-        auth_type: 'sms'
+        id_type: 'tel'
       })
       console.log(res)
       setRes(res)

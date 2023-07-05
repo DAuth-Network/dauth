@@ -6,8 +6,8 @@ export interface IOtpConfirmReturn {
     }
     signature: string
 }
-export type TAccount_type = 'email' | 'sms'
-export type TAuth_type = 'google' | 'github' | 'apple' | 'email' | 'sms'
+export type TAccount_type = 'mailto' | 'tel'
+export type TID_type = 'google' | 'github' | 'apple' | 'twitter' | 'mailto' | 'tel'
 export type TSign_mode = 'jwt' | 'proof'
 export interface IDauthConfig {
     baseURL: string,
