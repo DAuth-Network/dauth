@@ -45,8 +45,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/core
       '@dauth/dauth-provider':
-        specifier: ^0.0.1
-        version: 0.0.1(react-dom@18.2.0)(react@18.2.0)(typescript@5.0.2)(vite@4.3.2)
+        specifier: ^0.0.9
+        version: link:../../packages/dauth-provider
       '@react-oauth/google':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@18.2.0)(react@18.2.0)
@@ -778,35 +778,6 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@dauth/dauth-provider@0.0.1(react-dom@18.2.0)(react@18.2.0)(typescript@5.0.2)(vite@4.3.2):
-    resolution: {integrity: sha512-ovkEZEXhEtaEzSxY9I2CazJwG6ieENVzTx23lEULh0RMzkcXUMymP39tCR8jqshRcz3PsV79J6KYlHGwN1qYpQ==}
-    peerDependencies:
-      react: ^17.0.2
-      react-dom: ^17.0.2
-    dependencies:
-      '@react-oauth/google': 0.11.0(react-dom@18.2.0)(react@18.2.0)
-      '@rollup/plugin-typescript': 11.1.2(tslib@2.6.0)(typescript@5.0.2)
-      '@types/elliptic': 6.4.14
-      '@types/node': 20.4.0
-      ahooks: 3.7.8(react@18.2.0)
-      axios: 1.3.5
-      elliptic: 6.5.4
-      node-forge: 1.3.1
-      react: 18.2.0
-      react-auth-code-input: 3.2.1(react@18.2.0)
-      react-dom: 18.2.0(react@18.2.0)
-      react-icons: 4.10.1(react@18.2.0)
-      react-spinners: 0.13.8(react-dom@18.2.0)(react@18.2.0)
-      tslib: 2.6.0
-      vite-plugin-dts: 2.3.0(@types/node@20.4.0)(vite@4.3.2)
-    transitivePeerDependencies:
-      - debug
-      - rollup
-      - supports-color
-      - typescript
-      - vite
-    dev: false
-
   /@esbuild/android-arm64@0.17.19:
     resolution: {integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==}
     engines: {node: '>=12'}
@@ -1530,16 +1501,6 @@ packages:
       - '@types/node'
     dev: false
 
-  /@microsoft/api-extractor-model@7.27.4(@types/node@20.4.0):
-    resolution: {integrity: sha512-HjqQFmuGPOS20rtnu+9Jj0QrqZyR59E+piUWXPMZTTn4jaZI+4UmsHSf3Id8vyueAhOBH2cgwBuRTE5R+MfSMw==}
-    dependencies:
-      '@microsoft/tsdoc': 0.14.2
-      '@microsoft/tsdoc-config': 0.16.2
-      '@rushstack/node-core-library': 3.59.5(@types/node@20.4.0)
-    transitivePeerDependencies:
-      - '@types/node'
-    dev: false
-
   /@microsoft/api-extractor@7.36.1(@types/node@20.1.0):
     resolution: {integrity: sha512-2SPp1jq6wDY5IOsRLUv/4FxngslctBZJlztAJ3uWpCAwqKQG7ESdL3DhEza+StbYLtBQmu1Pk6q1Vkhl7qD/bg==}
     hasBin: true
@@ -1548,26 +1509,6 @@ packages:
       '@microsoft/tsdoc': 0.14.2
       '@microsoft/tsdoc-config': 0.16.2
       '@rushstack/node-core-library': 3.59.5(@types/node@20.1.0)
-      '@rushstack/rig-package': 0.4.0
-      '@rushstack/ts-command-line': 4.15.1
-      colors: 1.2.5
-      lodash: 4.17.21
-      resolve: 1.22.2
-      semver: 7.3.8
-      source-map: 0.6.1
-      typescript: 5.0.4
-    transitivePeerDependencies:
-      - '@types/node'
-    dev: false
-
-  /@microsoft/api-extractor@7.36.1(@types/node@20.4.0):
-    resolution: {integrity: sha512-2SPp1jq6wDY5IOsRLUv/4FxngslctBZJlztAJ3uWpCAwqKQG7ESdL3DhEza+StbYLtBQmu1Pk6q1Vkhl7qD/bg==}
-    hasBin: true
-    dependencies:
-      '@microsoft/api-extractor-model': 7.27.4(@types/node@20.4.0)
-      '@microsoft/tsdoc': 0.14.2
-      '@microsoft/tsdoc-config': 0.16.2
-      '@rushstack/node-core-library': 3.59.5(@types/node@20.4.0)
       '@rushstack/rig-package': 0.4.0
       '@rushstack/ts-command-line': 4.15.1
       colors: 1.2.5
@@ -1656,25 +1597,6 @@ packages:
       typescript: 5.0.2
     dev: false
 
-  /@rollup/plugin-typescript@11.1.2(tslib@2.6.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-0ghSOCMcA7fl1JM+0gYRf+Q/HWyg+zg7/gDSc+fRLmlJWcW5K1I+CLRzaRhXf4Y3DRyPnnDo4M2ktw+a6JcDEg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0||^3.0.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      tslib:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.0.2
-      resolve: 1.22.2
-      tslib: 2.6.0
-      typescript: 5.0.2
-    dev: false
-
   /@rollup/pluginutils@4.2.1:
     resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
     engines: {node: '>= 8.0.0'}
@@ -1706,24 +1628,6 @@ packages:
         optional: true
     dependencies:
       '@types/node': 20.1.0
-      colors: 1.2.5
-      fs-extra: 7.0.1
-      import-lazy: 4.0.0
-      jju: 1.4.0
-      resolve: 1.22.2
-      semver: 7.3.8
-      z-schema: 5.0.5
-    dev: false
-
-  /@rushstack/node-core-library@3.59.5(@types/node@20.4.0):
-    resolution: {integrity: sha512-1IpV7LufrI1EoVO8hYsb3t6L8L+yp40Sa0OaOV2CIu1zx4e6ZeVNaVIEXFgMXBKdGXkAh21MnCaIzlDNpG6ZQw==}
-    peerDependencies:
-      '@types/node': '*'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@types/node': 20.4.0
       colors: 1.2.5
       fs-extra: 7.0.1
       import-lazy: 4.0.0
@@ -2264,25 +2168,6 @@ packages:
       resize-observer-polyfill: 1.5.1
       screenfull: 5.2.0
       tslib: 2.5.0
-    dev: false
-
-  /ahooks@3.7.8(react@18.2.0):
-    resolution: {integrity: sha512-e/NMlQWoCjaUtncNFIZk3FG1ImSkV/JhScQSkTqnftakRwdfZWSw6zzoWSG9OMYqPNs2MguDYBUFFC6THelWXA==}
-    engines: {node: '>=8.0.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      '@babel/runtime': 7.22.6
-      '@types/js-cookie': 2.2.7
-      ahooks-v3-count: 1.0.0
-      dayjs: 1.11.9
-      intersection-observer: 0.12.2
-      js-cookie: 2.2.1
-      lodash: 4.17.21
-      react: 18.2.0
-      resize-observer-polyfill: 1.5.1
-      screenfull: 5.2.0
-      tslib: 2.6.0
     dev: false
 
   /ajv@6.12.6:
@@ -5572,6 +5457,7 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
 
   /preferred-pm@3.0.3:
     resolution: {integrity: sha512-+wZgbxNES/KlJs9q40F/1sfOd/j7f1O9JaHcW5Dsn3aUUOZg3L2bjpVUcKV2jvtElYfoTuQiNeMfQJ4kwUAhCQ==}
@@ -5697,14 +5583,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
-
-  /react-icons@4.10.1(react@18.2.0):
-    resolution: {integrity: sha512-/ngzDP/77tlCfqthiiGNZeYFACw85fUjZtLbedmJ5DTlNDIwETxhwBzdOJ21zj4iJdvc0J3y7yOsX3PpxAJzrw==}
-    peerDependencies:
-      react: '*'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react-icons@4.8.0(react@18.2.0):
@@ -6408,10 +6286,6 @@ packages:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: false
 
-  /tslib@2.6.0:
-    resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
-    dev: false
-
   /tsup@7.1.0(postcss@8.4.23)(typescript@5.0.2):
     resolution: {integrity: sha512-mazl/GRAk70j8S43/AbSYXGgvRP54oQeX8Un4iZxzATHt0roW0t6HYDVZIXMw0ZQIpvr1nFMniIVnN5186lW7w==}
     engines: {node: '>=16.14'}
@@ -6650,29 +6524,6 @@ packages:
       - supports-color
     dev: false
 
-  /vite-plugin-dts@2.3.0(@types/node@20.4.0)(vite@4.3.2):
-    resolution: {integrity: sha512-WbJgGtsStgQhdm3EosYmIdTGbag5YQpZ3HXWUAPCDyoXI5qN6EY0V7NXq0lAmnv9hVQsvh0htbYcg0Or5Db9JQ==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      vite: '>=2.9.0'
-    dependencies:
-      '@babel/parser': 7.22.6
-      '@microsoft/api-extractor': 7.36.1(@types/node@20.4.0)
-      '@rollup/pluginutils': 5.0.2
-      '@rushstack/node-core-library': 3.59.5(@types/node@20.4.0)
-      debug: 4.3.4
-      fast-glob: 3.3.0
-      fs-extra: 10.1.0
-      kolorist: 1.8.0
-      magic-string: 0.29.0
-      ts-morph: 18.0.0
-      vite: 4.3.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - rollup
-      - supports-color
-    dev: false
-
   /vite@4.3.2:
     resolution: {integrity: sha512-9R53Mf+TBoXCYejcL+qFbZde+eZveQLDYd9XgULILLC1a5ZwPaqgmdVpL8/uvw2BM/1TzetWjglwm+3RO+xTyw==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -6703,6 +6554,7 @@ packages:
       rollup: 3.26.1
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /vite@4.3.2(@types/node@20.1.0):
     resolution: {integrity: sha512-9R53Mf+TBoXCYejcL+qFbZde+eZveQLDYd9XgULILLC1a5ZwPaqgmdVpL8/uvw2BM/1TzetWjglwm+3RO+xTyw==}
