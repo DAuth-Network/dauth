@@ -3,7 +3,7 @@ name: Build and Push Packages
 on:
   push:
     branches:
-      - ci
+      - main
 
 jobs:
   build_and_push:
@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: install pnpm
+        run: npm i pnpm@latest -g
+
       - name: Install Dependencies
         run: pnpm install
 
@@ -29,6 +32,7 @@ jobs:
 
       - name: Build and Push Packages
         run: |
+          echo "//registry.npmjs.org/:_authToken=\${{ secrets.NPM_TOKEN }}" > $package/.npmrc
           for commit in ${{ steps.changes.outputs.changed_packages }}
           do
             npx changeset publish --commit $commit
