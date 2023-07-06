@@ -20,16 +20,16 @@ jobs:
 
       - name: install pnpm
         run: npm i pnpm@latest -g
-      - name: Setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-      - name: setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+    
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Build and Push Packages
+      - name: Build Package
+        run: pnpm --filter core build
+
+      - name: Push Packages
         run: |
           cd packages/core
-          pnpm build
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
           npm publish --access public
           
