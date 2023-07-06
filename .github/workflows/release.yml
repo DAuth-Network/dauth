@@ -20,7 +20,10 @@ jobs:
 
       - name: install pnpm
         run: npm i pnpm@latest -g
-
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+      - name: setup pnpm config
+        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
       - name: Install Dependencies
         run: pnpm install
 
@@ -32,7 +35,6 @@ jobs:
 
       - name: Build and Push Packages
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${{ secrets.NPM_TOKEN }}" > $package/.npmrc
           for commit in ${{ steps.changes.outputs.changed_packages }}
           do
             npx changeset publish --commit $commit
