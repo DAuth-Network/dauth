@@ -27,18 +27,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Check Changed Packages
-        id: changes
-        run: |
-          npx changeset status --json > changes.json
-          echo "::set-output name=changed_packages::$(node -p \"require('./changes.json').changes.map(change => change.commit).join(' ')\" | xargs)"
-
       - name: Build and Push Packages
         run: |
-          for commit in ${{ steps.changes.outputs.changed_packages }}
-          do
-            npx changeset publish --commit $commit
-            cd $(npx changeset version $commit --output)
-            npm publish --access public
-            cd ..
-          done
+          cd packages/core
+          pnpm build
+          npm publish --access public
+          
