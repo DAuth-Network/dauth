@@ -1,38 +1,35 @@
-name: Changesets
+name: Build and Push Packages
+
 on:
   push:
     branches:
-      - main
-env:
-  CI: true
-  PNPM_CACHE_FOLDER: .pnpm-store
+      - ci
+
 jobs:
-  version:
-    timeout-minutes: 15
+  build_and_push:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout code repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: setup node.js
-        uses: actions/setup-node@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 16
+
       - name: install pnpm
         run: npm i pnpm@latest -g
-      - name: Setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-      - name: setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
-      - name: install dependencies
+    
+      - name: Install Dependencies
         run: pnpm install
-      - name: create and publish versions
-        uses: changesets/action@v1
-        with:
-          version: pnpm ci:version
-          commit: "chore: update versions"
-          title: "chore: update versions"
-          publish: pnpm ci:publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Package
+        run: pnpm --filter core build
+
+      - name: Push Packages
+        run: |
+          cd packages/core
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          npm publish --access public
+          

@@ -37,14 +37,14 @@ const dauth = new DAuth({
 
 1. Use the `sendOtp` method to deliver an OTP code to the user. This method requires three parameters:
 * `account`, which refers to the user's Google account, email address, or phone number;
-* `account_type`, which can be `email`, `google`, or `sms`;
+* `id_type`, which can be `mailto`, `rel`;
 * `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
 
 ```javascript
     // account, account_type, request_id
       await dauth.service.sendOtp({
         account: account,
-        account_type: 'email',
+        id_type: 'mailto',
         request_id: request_id: 'The id related to the TX or userOp'
       })
 ```
@@ -55,12 +55,12 @@ const dauth = new DAuth({
     // code,
     // request_id
     // mode: jwt | proof
-    // auth_type: "email" | "sms"
+    // id_type: "mailto" | "tel"
     const result = await dauth.service.authOptConfirm({
         code,
         request_id: 'The id related to the TX or userOp',
         mode: 'jwt' // or 'proof',
-        auth_type: "email"
+        id_type: "mailto"
       })
     /* example return 
     {
@@ -68,7 +68,7 @@ const dauth = new DAuth({
         "data": {
         "auth": {
         "account": "5146a933b8879b3******ee2f4b18573d0ccece0453de374589",
-        "auth_type": "email",
+        "id_type": "mailto",
         "request_id": "test"
         },
         "signature": "717a84b617e9ae8c4d002e95073cfdc07e1c388***5b93658ea94f32945064dc0932ddeebb0d0fa17408b4e62aeea355304b6201b"
@@ -100,12 +100,12 @@ We recommend you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
 ```javascript
     // code, 
     // request_id,
-    // auth_type
+    // id_type
     // mode: jwt | proof
     const result = await dauth.service.authOauth({
         token: authorization_code,
         request_id: 'test',
-        auth_type: 'google',
+        id_type: 'google',
         mode: 'jwt' // or 'proof'
       })
     /* example return 
@@ -114,7 +114,7 @@ We recommend you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
         "data": {
             "auth": {
             "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-            "auth_type": "google",
+            "id_type": "google",
             "request_id": "test"
         },
         "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
@@ -143,12 +143,12 @@ We recommend you to use [react-apple-login](https://www.npmjs.com/package/react-
 ```javascript
     // code, 
     // request_id,
-    // auth_type
+    // id_type
     // mode: jwt | proof
     const result = await dauth.service.authOauth({
         token: authorization_code,
         request_id: 'test',
-        auth_type: 'apple',
+        id_type: 'apple',
         mode: 'jwt' // or 'proof'
       })
     /* example return 
@@ -157,7 +157,7 @@ We recommend you to use [react-apple-login](https://www.npmjs.com/package/react-
         "data": {
             "auth": {
             "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-            "auth_type": "apple",
+            "id_type": "apple",
             "request_id": "test"
         },
         "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
