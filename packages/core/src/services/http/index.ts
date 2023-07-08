@@ -102,7 +102,7 @@ export class DAuthHttpService {
         return true
 
     }
-    async authOptConfirm({ code, request_id, mode, id_type }: { code: string; request_id: string, mode: TSign_mode, id_type: TID_type }): Promise<any> {
+    async authOtpConfirm({ code, request_id, mode, id_type }: { code: string; request_id: string, mode: TSign_mode, id_type: TID_type }): Promise<any> {
         const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
