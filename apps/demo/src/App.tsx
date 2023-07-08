@@ -43,7 +43,7 @@ function App() {
   }
   const authOtpConfirm = async () => {
     try {
-      const res = await dauth.service.authOptConfirm({
+      const res = await dauth.service.authOtpConfirm({
         code: emailOtp,
         request_id: 'test',
         mode: mode,
@@ -57,7 +57,7 @@ function App() {
   }
   const authSMSOtpConfirm = async () => {
     try {
-      const res = await dauth.service.authOptConfirm({
+      const res = await dauth.service.authOtpConfirm({
         code: smsOtp,
         request_id: 'test',
         mode,

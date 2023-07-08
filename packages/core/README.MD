@@ -26,7 +26,7 @@ Before you begin, please complete the [SDK application form](https://forms.gle/3
 After installing the package, import it into your project and begin to utilize it:
 
 ```javascript
-const DAuth = require('@dauth/core');
+import DAuth from "@dauth/core";
 const dauth = new DAuth({
   baseURL: 'dauth node-url',
   clientID: 'demo',
@@ -37,7 +37,7 @@ const dauth = new DAuth({
 
 1. Use the `sendOtp` method to deliver an OTP code to the user. This method requires three parameters:
 * `account`, which refers to the user's Google account, email address, or phone number;
-* `id_type`, which can be `mailto`, `rel`;
+* `id_type`, which can be `mailto`, `tel`;
 * `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
 
 ```javascript
@@ -49,14 +49,14 @@ const dauth = new DAuth({
       })
 ```
 
-2. The `authOptConfirm` method can be used to verify an OTP code and obtain the DAuth proof.
+2. The `authOtpConfirm` method can be used to verify an OTP code and obtain the DAuth proof.
 
 ```javascript
     // code,
     // request_id
     // mode: jwt | proof
     // id_type: "mailto" | "tel"
-    const result = await dauth.service.authOptConfirm({
+    const result = await dauth.service.authOtpConfirm({
         code,
         request_id: 'The id related to the TX or userOp',
         mode: 'jwt' // or 'proof',
