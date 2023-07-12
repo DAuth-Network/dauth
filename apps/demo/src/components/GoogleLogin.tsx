@@ -1,4 +1,3 @@
-import { Button } from '@dauth/dauth-provider';
 import { useGoogleLogin, CodeResponse } from '@react-oauth/google';
 import { FC } from 'react';
 
@@ -17,9 +16,9 @@ const GoogleLoginCom: FC<IGoogleLoginComProps> = ({ onLoginSuccess }) => {
     }
     return (
 
-        <Button className='px-10 ml-10' onClick={() => login()}>
+        <button className='px-10 ml-10' onClick={() => login()}>
             Login with google
-        </Button>
+        </button>
     )
 }
 export default GoogleLoginCom

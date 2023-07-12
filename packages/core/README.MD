@@ -2,7 +2,6 @@
 
 Integrate the DAuth SDK into your platform to provide your users with a decentralized, verifiable social authentication experience. DAuth includes One-Time Password (OTP) methods through Email and SMS, and OAuth protocols via platforms such as Google and Github.
 
-
 ## 🎉 Key Features
 
 - Seamless integration with the DAuth Network.
@@ -28,17 +27,18 @@ After installing the package, import it into your project and begin to utilize i
 ```javascript
 import DAuth from "@dauth/core";
 const dauth = new DAuth({
-  baseURL: 'dauth node-url',
-  clientID: 'demo',
-})
+  baseURL: "dauth node-url",
+  clientID: "demo",
+});
 ```
 
 ### Leveraging OPT Authentication with DAuth
 
 1. Use the `sendOtp` method to deliver an OTP code to the user. This method requires three parameters:
-* `account`, which refers to the user's Google account, email address, or phone number;
-* `id_type`, which can be `mailto`, `tel`;
-* `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
+
+- `account`, which refers to the user's Google account, email address, or phone number;
+- `id_type`, which can be `mailto`, `tel`;
+- `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
 
 ```javascript
     // account, account_type, request_id
@@ -62,7 +62,7 @@ const dauth = new DAuth({
         mode: 'jwt' // or 'proof',
         id_type: "mailto"
       })
-    /* example return 
+    /* example return
     {
         "mode": "proof",
         "data": {
@@ -74,7 +74,7 @@ const dauth = new DAuth({
         "signature": "717a84b617e9ae8c4d002e95073cfdc07e1c388***5b93658ea94f32945064dc0932ddeebb0d0fa17408b4e62aeea355304b6201b"
         }
     }
-    or 
+    or
     {
             "mode": "jwt",
                 "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4P57B3YDkXCkYo32Ts5PGgwxh3ayfjGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
@@ -93,22 +93,22 @@ Ensure you've completed the [SDK application form](https://forms.gle/3A1bRx2ipX2
 
 1. Retrieve authorization code from Google.
 
-We recommend you to use [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google) to get the authorization code. 
+We recommend you to use [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google) to get the authorization code.
 
 2. Upon receiving the authorization code, the `authOAuth` method can be used to procure the DAuth proof.
 
 ```javascript
-    // code, 
-    // request_id,
-    // id_type
-    // mode: jwt | proof
-    const result = await dauth.service.authOauth({
-        token: authorization_code,
-        request_id: 'test',
-        id_type: 'google',
-        mode: 'jwt' // or 'proof'
-      })
-    /* example return 
+// code,
+// request_id,
+// id_type
+// mode: jwt | proof
+const result = await dauth.service.authOauth({
+  token: authorization_code,
+  request_id: "test",
+  id_type: "google",
+  mode: "jwt", // or 'proof'
+});
+/* example return 
        {
         "mode": "proof",
         "data": {
@@ -128,30 +128,69 @@ We recommend you to use [@react-oauth/google](https://www.npmjs.com/package/@rea
          */
 ```
 
-
-
 #### Apple OAuth
 
 Ensure you've completed the [SDK application form](https://forms.gle/3A1bRx2ipX2fBLsw5).
 
 1. Retrieve authorization code from Apple.
 
-We recommend you to use [react-apple-login](https://www.npmjs.com/package/react-apple-login) to get the authorization code. 
+We recommend you to use [react-apple-login](https://www.npmjs.com/package/react-apple-login) to get the authorization code.
 
 2. Upon receiving the authorization code, the `authOAuth` method can be used to procure the DAuth proof.
 
 ```javascript
-    // code, 
-    // request_id,
-    // id_type
-    // mode: jwt | proof
-    const result = await dauth.service.authOauth({
-        token: authorization_code,
-        request_id: 'test',
-        id_type: 'apple',
-        mode: 'jwt' // or 'proof'
-      })
-    /* example return 
+// code,
+// request_id,
+// id_type
+// mode: jwt | proof
+const result = await dauth.service.authOauth({
+  token: authorization_code,
+  request_id: "test",
+  id_type: "apple",
+  mode: "jwt", // or 'proof'
+});
+/* example return 
+       {
+        "mode": "proof",
+        "data": {
+            "auth": {
+            "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
+            "id_type": "apple",
+            "request_id": "test"
+        },
+        "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
+        }
+    }
+    or 
+    {
+            "mode": "jwt",
+                "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4P57B3YDkXCkYo32Ts5PGgwxh3ayfjGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
+        }
+         */
+```
+
+#### Twitter OAuth
+
+Ensure you've completed the [SDK application form](https://forms.gle/3A1bRx2ipX2fBLsw5).
+
+1. Retrieve authorization code from Twitter Oauth2.
+
+    Please refer to [Twitter Oauth2 wiki](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter#obtain-a-request-token) and [example]() to obtain the twitter auth code. 
+
+2. Upon receiving the authorization code, the `authOAuth` method can be used to procure the DAuth proof.
+
+```javascript
+// code,
+// request_id,
+// id_type
+// mode: jwt | proof
+const result = await dauth.service.authOauth({
+  token: authorization_code,
+  request_id: "test",
+  id_type: "apple",
+  mode: "jwt", // or 'proof'
+});
+/* example return 
        {
         "mode": "proof",
         "data": {
