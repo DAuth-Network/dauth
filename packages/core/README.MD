@@ -35,10 +35,9 @@ const dauth = new DAuth({
 ### Leveraging OPT Authentication with DAuth
 
 1. Use the `sendOtp` method to deliver an OTP code to the user. This method requires three parameters:
-
-- `account`, which refers to the user's Google account, email address, or phone number;
-- `id_type`, which can be `mailto`, `tel`;
-- `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
+* `account`, which refers to the user's Google account, email address, or phone number;
+* `id_type`, which can be `mailto`, `tel`;
+* `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
 
 ```javascript
     // account, account_type, request_id
