@@ -175,7 +175,7 @@ Ensure you've completed the [SDK application form](https://forms.gle/3A1bRx2ipX2
 
 1. Retrieve authorization code from Twitter Oauth2.
 
-    Please refer to [Twitter Oauth2 wiki](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter#obtain-a-request-token) and [example]() to obtain the twitter auth code. 
+    Please refer to [Twitter Oauth2 wiki](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter#obtain-a-request-token) and [Our simple example](https://github.com/DAuth-Network/dauth/blob/main/apps/demo/src/components/TwitterLogin.tsx) to obtain the twitter auth code. 
 
 2. Upon receiving the authorization code, the `authOAuth` method can be used to procure the DAuth proof.
 
