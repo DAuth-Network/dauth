@@ -14,6 +14,7 @@
     "@react-oauth/google": "^0.11.0",
     "ahooks": "^3.7.8",
     "autoprefixer": "^10.4.14",
+    "ethers": "5.7.2",
     "postcss": "^8.4.23",
     "react": "^18.2.0",
     "react-apple-login": "^1.1.6",

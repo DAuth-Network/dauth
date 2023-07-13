@@ -9,9 +9,9 @@ import { IOtpConfirmReturn, TSign_mode } from "@dauth/core";
 import { useSearchParams } from "react-router-dom";
 import { useRequest } from "ahooks";
 
-
+import ethers, { utils } from "ethers"
 const SDK: FC = () => {
-    
+
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [smsOtp, setSmsOtp] = useState('')
@@ -123,6 +123,25 @@ const SDK: FC = () => {
             console.log(error)
         }
     }
+    const verify = () => {
+        const { auth, signature } = res!.data
+        const { account, id_type, request_id } = auth
+        const id_type_hash = utils.keccak256(utils.toUtf8Bytes(id_type))
+        const request_id_hash = utils.keccak256(utils.toUtf8Bytes(request_id))
+
+        const msgHash = utils.keccak256(
+            utils.defaultAbiCoder.encode(["bytes32", "bytes32", "bytes32"],
+                [id_type_hash,
+                    "0x" + account,
+                    request_id_hash]))
+
+        const recoveredPubKey = utils.recoverPublicKey(msgHash, "0x" + signature);
+        const recoveredAddress = utils.recoverAddress(msgHash, "0x" + signature);
+
+        console.log("recoveredPubKey", recoveredPubKey)
+        console.log("recoveredAddress", recoveredAddress)
+        // console.log("hash email", utils.keccak256(utils.toUtf8Bytes("ironchaindao@gmail.com")))
+    }
 
     return (
         <div className="App">
@@ -138,7 +157,7 @@ const SDK: FC = () => {
                             Sign mode: (jwt | proof) <input className=" py-2 border-2 w-56 rounded-sm	" value={mode} onChange={(e) => { setMode(e.target.value as TSign_mode) }} type='text' />
                         </div>
                         <div>
-                        Request Id: <input className=" py-2 border-2 w-56 rounded-sm	" value={requestId} onChange={(e) => { setRequestId(e.target.value) }} type="text" />
+                            Request Id: <input className=" py-2 border-2 w-56 rounded-sm	" value={requestId} onChange={(e) => { setRequestId(e.target.value) }} type="text" />
 
                         </div>
 
@@ -214,7 +233,9 @@ const SDK: FC = () => {
                 <div className="p-10 w-3/5">
                     {res && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={res!} />}
                 </div>
-
+                <div>
+                    <button onClick={verify}>verify</button>
+                </div>
             </div>
         </div>
     );
