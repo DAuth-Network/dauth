@@ -1,6 +1,7 @@
 import { DAuthHttpService } from "./services/http"
 import { IDauthConfig } from "./types"
 export * from "./types"
+export * from "./utils"
 export default class DAuth {
     baseURL: string
     service: DAuthHttpService

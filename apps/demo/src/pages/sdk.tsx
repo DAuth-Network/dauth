@@ -5,21 +5,27 @@ import AppleLogin from "react-apple-login";
 import GoogleLoginCom from "../components/GoogleLogin";
 import { dauth } from "../utils";
 import TwitterLogin from "../components/TwitterLogin";
-import { IOtpConfirmReturn, TSign_mode } from "@dauth/core";
+import {
+    IOtpConfirmReturn,
+    TSign_mode,
+    verifyProof
+} from "@dauth/core";
 import { useSearchParams } from "react-router-dom";
 import { useRequest } from "ahooks";
 
-
 const SDK: FC = () => {
-    
+
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [smsOtp, setSmsOtp] = useState('')
     const [emailOtp, setEmailOtp] = useState('')
     const [requestId, setRequestId] = useState('test')
 
-    const [mode, setMode] = useState<TSign_mode>('jwt')
-    const [res, setRes] = useState<IOtpConfirmReturn>()
+    const [mode, setMode] = useState<TSign_mode>('proof')
+    const [result, setRes] = useState<{
+        data: IOtpConfirmReturn,
+        mode: TSign_mode
+    }>()
     const [searchParams] = useSearchParams();
     const code = searchParams.get("twitterAuth")
     const authEmailOtp = async () => {
@@ -123,6 +129,13 @@ const SDK: FC = () => {
             console.log(error)
         }
     }
+    const verify = () => {
+        const proof =  result!.data
+        const isValid =  verifyProof(proof)
+        if (isValid) {
+
+        }
+    }
 
     return (
         <div className="App">
@@ -138,7 +151,7 @@ const SDK: FC = () => {
                             Sign mode: (jwt | proof) <input className=" py-2 border-2 w-56 rounded-sm	" value={mode} onChange={(e) => { setMode(e.target.value as TSign_mode) }} type='text' />
                         </div>
                         <div>
-                        Request Id: <input className=" py-2 border-2 w-56 rounded-sm	" value={requestId} onChange={(e) => { setRequestId(e.target.value) }} type="text" />
+                            Request Id: <input className=" py-2 border-2 w-56 rounded-sm	" value={requestId} onChange={(e) => { setRequestId(e.target.value) }} type="text" />
 
                         </div>
 
@@ -212,7 +225,10 @@ const SDK: FC = () => {
                     </div>
                 </div>
                 <div className="p-10 w-3/5">
-                    {res && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={res!} />}
+                    {result && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={result!} />}
+                    <div>
+                        <button onClick={verify}>verify</button>
+                    </div>
                 </div>
 
             </div>
