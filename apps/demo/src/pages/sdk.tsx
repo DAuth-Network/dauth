@@ -124,23 +124,31 @@ const SDK: FC = () => {
         }
     }
     const verify = () => {
+        console.log(res)
         const { auth, signature } = res!.data
+        const sig = "0x" + signature
         const { account, id_type, request_id } = auth
         const id_type_hash = utils.keccak256(utils.toUtf8Bytes(id_type))
         const request_id_hash = utils.keccak256(utils.toUtf8Bytes(request_id))
-
-        const msgHash = utils.keccak256(
-            utils.defaultAbiCoder.encode(["bytes32", "bytes32", "bytes32"],
-                [id_type_hash,
-                    "0x" + account,
-                    request_id_hash]))
-
-        const recoveredPubKey = utils.recoverPublicKey(msgHash, "0x" + signature);
-        const recoveredAddress = utils.recoverAddress(msgHash, "0x" + signature);
-
+        // concat data 
+        const msg = utils.defaultAbiCoder.encode(
+            ["bytes32", "bytes32", "bytes32"],
+            [id_type_hash, "0x" + account, request_id_hash])
+        //  hash
+        const msgHash = utils.keccak256(msg)
+        // Add prefix and  hash
+        const msgHashWithPrefix = utils.hashMessage(utils.arrayify(msgHash))
+        const recoveredPubKey = utils.recoverPublicKey(msgHashWithPrefix, sig);
+        
+        const recoveredAddress = utils.recoverAddress(msgHashWithPrefix, sig);
+        const recoveredAddress2 = utils.verifyMessage(utils.arrayify(msgHash), sig);
+        console.log("msg", msg)
+        console.log("msgHash", msgHash)
+        console.log("msgHash", utils.arrayify(msgHash))
+        console.log("msgHashWithPrefix", msgHashWithPrefix)
         console.log("recoveredPubKey", recoveredPubKey)
         console.log("recoveredAddress", recoveredAddress)
-        // console.log("hash email", utils.keccak256(utils.toUtf8Bytes("ironchaindao@gmail.com")))
+        console.log("recoveredAddress2", recoveredAddress2)
     }
 
     return (
@@ -232,10 +240,11 @@ const SDK: FC = () => {
                 </div>
                 <div className="p-10 w-3/5">
                     {res && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={res!} />}
+                    <div>
+                        <button onClick={verify}>verify</button>
+                    </div>
                 </div>
-                <div>
-                    <button onClick={verify}>verify</button>
-                </div>
+
             </div>
         </div>
     );
