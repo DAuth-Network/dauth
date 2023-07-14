@@ -36,9 +36,9 @@ const dauth = new DAuth({
 
 1. Use the `sendOtp` method to deliver an OTP code to the user. This method requires three parameters:
 
-- `account`, which refers to the user's Google account, email address, or phone number;
+- `account`, which refers to the user's Google account, email address, or phone number. It is hexlike string without "0x".
 - `id_type`, which can be `mailto`, `tel`;
-- `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
+- `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID. It is string or hexlike string without "0x".
 
 ```typescript
     // account, account_type, request_id
@@ -225,8 +225,10 @@ const result = await authOtpConfirm({
 
 const isValid = verifyProof(result.data)
 ```
-You can go here to view the source code (verifyProof)[].
+
+The following is the source code for verifyProof, you can implement it in your preferred language.
 ```typescript
+import {utils} from "ethers"
 export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3b4e49Fd77A959B704f6a045eeA92bd55b3b571') => {
    const {auth, signature} = proof
    // String to hexlike
