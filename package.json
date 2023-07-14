@@ -18,5 +18,8 @@
     "ts-jest": "^29.1.0",
     "tsup": "^7.1.0",
     "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "ethers": "5.7.2"
   }
 }

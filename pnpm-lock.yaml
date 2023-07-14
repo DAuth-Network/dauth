@@ -3,6 +3,10 @@ lockfileVersion: '6.0'
 importers:
 
   .:
+    dependencies:
+      ethers:
+        specifier: 5.7.2
+        version: 5.7.2
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.1

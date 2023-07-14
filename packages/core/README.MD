@@ -40,18 +40,18 @@ const dauth = new DAuth({
 - `id_type`, which can be `mailto`, `tel`;
 - `request_id` is client-provided, and could be a string containing a unique transaction/bundle/userOp ID;
 
-```javascript
+```typescript
     // account, account_type, request_id
       await dauth.service.sendOtp({
         account: account,
         id_type: 'mailto',
-        request_id: request_id: 'The id related to the TX or userOp'
+        request_id: "request_id" // request_id: 'The id related to the TX or userOp'
       })
 ```
 
 2. The `authOtpConfirm` method can be used to verify an OTP code and obtain the DAuth proof.
 
-```javascript
+```typescript
     // code,
     // request_id
     // mode: jwt | proof
@@ -59,7 +59,7 @@ const dauth = new DAuth({
     const result = await dauth.service.authOtpConfirm({
         code,
         request_id: 'The id related to the TX or userOp',
-        mode: 'jwt' // or 'proof',
+        mode: 'jwt', // or 'proof',
         id_type: "mailto"
       })
     /* example return
@@ -113,11 +113,11 @@ const result = await dauth.service.authOauth({
         "mode": "proof",
         "data": {
             "auth": {
-            "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-            "id_type": "google",
-            "request_id": "test"
-        },
-        "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
+                "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
+                "id_type": "google",
+                "request_id": "test"
+            },
+            "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
         }
     }
     or 
@@ -138,7 +138,7 @@ We recommend you to use [react-apple-login](https://www.npmjs.com/package/react-
 
 2. Upon receiving the authorization code, the `authOAuth` method can be used to procure the DAuth proof.
 
-```javascript
+```
 // code,
 // request_id,
 // id_type
@@ -187,7 +187,7 @@ Ensure you've completed the [SDK application form](https://forms.gle/3A1bRx2ipX2
 const result = await dauth.service.authOauth({
   token: authorization_code,
   request_id: "test",
-  id_type: "apple",
+  id_type: "twitter",
   mode: "jwt", // or 'proof'
 });
 /* example return 
@@ -195,11 +195,11 @@ const result = await dauth.service.authOauth({
         "mode": "proof",
         "data": {
             "auth": {
-            "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-            "id_type": "apple",
-            "request_id": "test"
-        },
-        "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
+                "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
+                "id_type": "twitter",
+                "request_id": "test"
+                },
+            "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
         }
     }
     or 
@@ -209,3 +209,56 @@ const result = await dauth.service.authOauth({
         }
          */
 ```
+
+### How to verify?
+#### 1. Verify Proof
+Dauth/core provide a "verifyProof" method to verify proof. The term "proof" in this context refers to a piece of evidence or verification that includes both the signed data and the metadata associated with the signature.
+
+```typescript
+import {verifyProof} from "@dauth/core"; 
+const result = await authOtpConfirm({
+   code,
+   request_id: 'The id related to the TX or userOp',
+   mode: 'proof',
+   id_type: "mailto"
+})
+
+const isValid = verifyProof(result.data)
+```
+You can go here to view the source code (verifyProof)[].
+```typescript
+export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3b4e49Fd77A959B704f6a045eeA92bd55b3b571') => {
+   const {auth, signature} = proof
+   // String to hexlike
+   const sig = "0x" + signature
+   const {account, id_type, request_id} = auth
+   // String to bytes and hash
+   const id_type_hash = utils.keccak256(utils.toUtf8Bytes(id_type))
+   // request_id can be two types: string or hex
+   // The request_id can have two types of values: a simple string or a hexadecimal string.
+   // If the length of the request_id is 64 characters, it is treated as a hexadecimal string.
+   // Otherwise, if the length is different from 64, it is treated as a regular string.
+   const request_id_hash = request_id.length === 64
+           ? utils.arrayify("0x" + request_id) : utils.keccak256(utils.toUtf8Bytes(request_id))
+   // Concat data
+   const msg = utils.defaultAbiCoder.encode(
+           ["bytes32", "bytes32", "bytes32"],
+           [id_type_hash, "0x" + account, request_id_hash])
+   // Hash and turn to bytes
+   const msgHash = utils.arrayify(utils.keccak256(msg))
+   // Computes the EIP-191 personal message digest of message.
+   // Personal messages are converted to UTF-8 bytes and prefixed with \x19Ethereum Signed Message: and the length of message.
+   const msgHashWithPrefix = utils.hashMessage(msgHash)
+
+   const recoveredAddress = utils.recoverAddress(msgHashWithPrefix, sig);
+
+   return recoveredAddress.toLowerCase() === dauthSignerAddress.toLocaleLowerCase()
+}
+
+```
+
+
+
+
+
+ 

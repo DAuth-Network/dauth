@@ -1,7 +1,7 @@
 export interface IOtpConfirmReturn {
     auth: {
         account: string,
-        auth_type: string,
+        id_type: TID_type,
         request_id: string
     }
     signature: string

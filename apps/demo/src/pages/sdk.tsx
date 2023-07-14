@@ -5,11 +5,14 @@ import AppleLogin from "react-apple-login";
 import GoogleLoginCom from "../components/GoogleLogin";
 import { dauth } from "../utils";
 import TwitterLogin from "../components/TwitterLogin";
-import { IOtpConfirmReturn, TSign_mode } from "@dauth/core";
+import {
+    IOtpConfirmReturn,
+    TSign_mode,
+    verifyProof
+} from "@dauth/core";
 import { useSearchParams } from "react-router-dom";
 import { useRequest } from "ahooks";
 
-import ethers, { utils } from "ethers"
 const SDK: FC = () => {
 
     const [email, setEmail] = useState('')
@@ -18,8 +21,11 @@ const SDK: FC = () => {
     const [emailOtp, setEmailOtp] = useState('')
     const [requestId, setRequestId] = useState('test')
 
-    const [mode, setMode] = useState<TSign_mode>('jwt')
-    const [res, setRes] = useState<IOtpConfirmReturn>()
+    const [mode, setMode] = useState<TSign_mode>('proof')
+    const [result, setRes] = useState<{
+        data: IOtpConfirmReturn,
+        mode: TSign_mode
+    }>()
     const [searchParams] = useSearchParams();
     const code = searchParams.get("twitterAuth")
     const authEmailOtp = async () => {
@@ -124,31 +130,11 @@ const SDK: FC = () => {
         }
     }
     const verify = () => {
-        console.log(res)
-        const { auth, signature } = res!.data
-        const sig = "0x" + signature
-        const { account, id_type, request_id } = auth
-        const id_type_hash = utils.keccak256(utils.toUtf8Bytes(id_type))
-        const request_id_hash = utils.keccak256(utils.toUtf8Bytes(request_id))
-        // concat data 
-        const msg = utils.defaultAbiCoder.encode(
-            ["bytes32", "bytes32", "bytes32"],
-            [id_type_hash, "0x" + account, request_id_hash])
-        //  hash
-        const msgHash = utils.keccak256(msg)
-        // Add prefix and  hash
-        const msgHashWithPrefix = utils.hashMessage(utils.arrayify(msgHash))
-        const recoveredPubKey = utils.recoverPublicKey(msgHashWithPrefix, sig);
-        
-        const recoveredAddress = utils.recoverAddress(msgHashWithPrefix, sig);
-        const recoveredAddress2 = utils.verifyMessage(utils.arrayify(msgHash), sig);
-        console.log("msg", msg)
-        console.log("msgHash", msgHash)
-        console.log("msgHash", utils.arrayify(msgHash))
-        console.log("msgHashWithPrefix", msgHashWithPrefix)
-        console.log("recoveredPubKey", recoveredPubKey)
-        console.log("recoveredAddress", recoveredAddress)
-        console.log("recoveredAddress2", recoveredAddress2)
+        const proof =  result!.data
+        const isValid =  verifyProof(proof)
+        if (isValid) {
+
+        }
     }
 
     return (
@@ -239,7 +225,7 @@ const SDK: FC = () => {
                     </div>
                 </div>
                 <div className="p-10 w-3/5">
-                    {res && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={res!} />}
+                    {result && <ReactJson displayDataTypes={false} quotesOnKeys={false} name={null} collapseStringsAfterLength={128} indentWidth={2} src={result!} />}
                     <div>
                         <button onClick={verify}>verify</button>
                     </div>
