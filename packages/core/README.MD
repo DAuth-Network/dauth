@@ -211,7 +211,7 @@ const result = await dauth.service.authOauth({
 ```
 
 ### How to verify?
-#### 1. Verify Proof
+#### 1. Proof Verification
 Dauth/core provide a "verifyProof" method to verify proof. The term "proof" in this context refers to a piece of evidence or verification that includes both the signed data and the metadata associated with the signature.
 
 ```typescript
