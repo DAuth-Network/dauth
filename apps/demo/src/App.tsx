@@ -1,6 +1,6 @@
 import {RouterProvider } from "react-router-dom";
 import routers from "./routes/index.tsx";
-
+import "./globals.css"
 function App() {
 
 
