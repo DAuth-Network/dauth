@@ -1,5 +1,6 @@
 import { useGoogleLogin, CodeResponse } from '@react-oauth/google';
 import { FC } from 'react';
+import {Button} from "./ui/button.tsx";
 
 
 interface IGoogleLoginComProps {
@@ -16,9 +17,9 @@ const GoogleLoginCom: FC<IGoogleLoginComProps> = ({ onLoginSuccess }) => {
     }
     return (
 
-        <button className='px-10 ml-10' onClick={() => login()}>
+        <Button className='px-10 ml-10' onClick={() => login()}>
             Login with google
-        </button>
+        </Button>
     )
 }
 export default GoogleLoginCom

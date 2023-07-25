@@ -13,6 +13,7 @@
     "@dauth/core": "workspace:^",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-radio-group": "^1.1.3",
+    "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@react-oauth/google": "^0.11.0",

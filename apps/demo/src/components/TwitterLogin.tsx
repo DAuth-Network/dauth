@@ -1,3 +1,4 @@
+import { Button } from "./ui/button";
 
 const TWITTER_CLIENT_ID = 'bG1uckxTUlJOVEk3ZjlsaU1NelE6MTpjaQ'
 const TwitterLogin = () => {
@@ -22,9 +23,9 @@ const TwitterLogin = () => {
     }
     return (
         <div>
-            <button onClick={onClick}>
+            <Button onClick={onClick}>
                 Login twitter
-            </button>
+            </Button>
         </div>
     )
 }
