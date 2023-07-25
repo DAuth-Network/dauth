@@ -3,7 +3,7 @@ name: Build and Push Packages
 on:
   push:
     branches:
-      - ci
+      - main
 
 jobs:
   build_and_push:

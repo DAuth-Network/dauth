@@ -294,7 +294,4 @@ export const verifyProof = (
   );
 };
 ```
-### 2. JWT Verification
-
-The following is the source code for verify JWT, you can implement it in your preferred language.
 
