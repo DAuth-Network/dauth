@@ -21,7 +21,7 @@ const SDK: FC = () => {
     const [emailOtp, setEmailOtp] = useState('')
     const [requestId, setRequestId] = useState('test')
     const [withPlainAccount, setWithPlainAccount] = useState(false)
-    const [mode, setMode] = useState<ESignMode>(ESignMode.PROOF)
+    const [mode, setMode] = useState<ESignMode>(ESignMode.JWT)
     const [result, setRes] = useState<{
         data: IOtpConfirmReturn,
         mode: TSign_mode
@@ -266,9 +266,11 @@ const SDK: FC = () => {
                 <div className="p-10 w-3/5">
                     {result && <><ReactJson displayDataTypes={false} quotesOnKeys={false} name={null}
                                             collapseStringsAfterLength={128} indentWidth={2} src={result!}/>
-                        <div>
+                        {
+                            mode === ESignMode.PROOF && <div>
                             <Button onClick={verify}>verify</Button>
                         </div>
+                        }
                     </>}
 
                 </div>
