@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
 export const Home = () => {
     const navigate = useNavigate()
@@ -7,12 +8,10 @@ export const Home = () => {
         <div>
 
             <div>
-                <button onClick={() => {
+                <Button onClick={() => {
                     navigate("/sdk");
-                }}>SDK DEMO</button>
-                <button onClick={() => {
-                    navigate("/stress");
-                }}>Stress test</button>
+                }}>SDK DEMO</Button>
+               
             </div>
 
         </div>
