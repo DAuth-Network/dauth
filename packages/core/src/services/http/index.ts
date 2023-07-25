@@ -76,11 +76,12 @@ export class DAuthHttpService {
     }
 
 
-    async authOauth({token, request_id, id_type, mode}: {
+    async authOauth({token, request_id, id_type, mode, withPlainAccount}: {
         token: string;
         request_id: string,
         id_type: TID_type,
-        mode: ESignMode
+        mode: ESignMode,
+        withPlainAccount?: boolean
     }): Promise<any> {
         const {session_id, cipher_str: cipher_code} = await this.exchangeKeyAndEncrypt(token)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
@@ -89,7 +90,8 @@ export class DAuthHttpService {
                 cipher_code,
                 session_id,
                 request_id,
-                sign_mode: mode
+                sign_mode: mode,
+                withPlainAccount
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
@@ -120,7 +122,7 @@ export class DAuthHttpService {
         request_id: string,
         mode: ESignMode,
         id_type: TID_type,
-        withPlainAccount: boolean
+        withPlainAccount?: boolean
     }): Promise<any> {
         const {session_id, cipher_str: cipher_code} = await this.exchangeKeyAndEncrypt(code, false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
