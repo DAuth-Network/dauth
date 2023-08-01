@@ -76,12 +76,11 @@ const result = await dauth.service.authOtpConfirm({
   "mode": "proof",
   "data": {
     "auth": {
-      "account": "d47f8269df8dee4059d8152d6b1fe5810d6af9228ee57a3811596f780ad8d041",
-      "id_type": "mailto",
+      "acc_and_type_hash": "c5056aae3e4b528500f5e19b0e**********c916766cdb226",
       "request_id": "test",
       "account_plain": "scoxxxxxxx@gmail.com"
     },
-    "signature": "578be12beb6cb5702c0c14e5b48b1599387225c96dba2cb8ce55001508408be71e355cf70be9b6c226e0cfbb454613532c5bfc2766ecd778f86d3057c81ed47a1c"
+    "signature": "578be12beb6cb5702c0c14e5b48b1599387225c96dba2cb8ce55001508******613532c5bfc2766ecd778f86d3057c81ed47a1c"
   }
 }
 or
@@ -139,9 +138,9 @@ const result = await dauth.service.authOauth({
         "mode": "proof",
         "data": {
             "auth": {
-                "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-                "id_type": "google",
-                "request_id": "test"
+              "acc_and_type_hash": "c5056aae3e4b528500f5e19b0e**********c916766cdb226",
+              "request_id": "test",
+              "account_plain": "scoxxxxxxx@gmail.com"
             },
             "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
         }
@@ -149,7 +148,7 @@ const result = await dauth.service.authOauth({
     or 
     {
             "mode": "jwt",
-                "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4P57B3YDkXCkYo32Ts5PGgwxh3ayfjGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
+                "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhbGciOiJSUz*****vPdVzvmySt9dRlJ7IKH2VFP_7tKsndgLQxqXeDrEavdA3sptb7H6KdG4********jGC46WToWASL_p3XkFsDBiX6CW8Ko3ohqERwB1s6yBO4B-ox4r6591jnzy1AIstnEFmt673yqJLQ"
         }
          */
 ```
@@ -180,10 +179,10 @@ const result = await dauth.service.authOauth({
         "mode": "proof",
         "data": {
             "auth": {
-            "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-            "id_type": "apple",
-            "request_id": "test"
-        },
+              "acc_and_type_hash": "c5056aae3e4b528500f5e19b0e**********c916766cdb226",
+              "request_id": "test",
+              "account_plain": "scoxxxxxxx@gmail.com"
+          },
         "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
         }
     }
@@ -221,10 +220,10 @@ const result = await dauth.service.authOauth({
         "mode": "proof",
         "data": {
             "auth": {
-                "account": "f69fd6bd0e98a7c2792e1****a3e7fd5de767",
-                "id_type": "twitter",
-                "request_id": "test"
-                },
+              "acc_and_type_hash": "c5056aae3e4b528500f5e19b0e**********c916766cdb226",
+              "request_id": "test",
+              "account_plain": "scoxxxxxxx@gmail.com"
+            },
             "signature": "a5186118ad83eb466e60b37******47efd65dd387e1226052c3253aa60ac2c63fd1c"
         }
     }
@@ -262,36 +261,29 @@ export const verifyProof = (
   proof: IOtpConfirmReturn,
   dauthSignerAddress = "0xf3b4e49Fd77A959B704f6a045eeA92bd55b3b571"
 ) => {
-  const { auth, signature } = proof;
-  // String to hexlike
-  const sig = "0x" + signature;
-  const { account, id_type, request_id } = auth;
-  // String to bytes and hash
-  const id_type_hash = utils.keccak256(utils.toUtf8Bytes(id_type));
-  // request_id can be two types: string or hex
-  // The request_id can have two types of values: a simple string or a hexadecimal string.
-  // If the length of the request_id is 64 characters, it is treated as a hexadecimal string.
-  // Otherwise, if the length is different from 64, it is treated as a regular string.
-  const request_id_hash =
-    request_id.length === 64
-      ? utils.arrayify("0x" + request_id)
-      : utils.keccak256(utils.toUtf8Bytes(request_id));
-  // Concat data
-  const msg = utils.defaultAbiCoder.encode(
-    ["bytes32", "bytes32", "bytes32"],
-    [id_type_hash, "0x" + account, request_id_hash]
-  );
-  // Hash and turn to bytes
-  const msgHash = utils.arrayify(utils.keccak256(msg));
-  // Computes the EIP-191 personal message digest of message.
-  // Personal messages are converted to UTF-8 bytes and prefixed with \x19Ethereum Signed Message: and the length of message.
-  const msgHashWithPrefix = utils.hashMessage(msgHash);
+   const {auth, signature} = proof
+    // String to hexlike
+    const sig = "0x" + signature
+    const {acc_and_type_hash, request_id} = auth
+    // request_id can be two types: string or hex
+    // The request_id can have two types of values: a simple string or a hexadecimal string.
+    // If the length of the request_id is 64 characters, it is treated as a hexadecimal string.
+    // Otherwise, if the length is different from 64, it is treated as a regular string.
+    const request_id_hash = request_id.length === 64
+        ? utils.arrayify("0x" + request_id) : utils.keccak256(utils.toUtf8Bytes(request_id))
+    // Concat data
+    const msg = utils.defaultAbiCoder.encode(
+        ["bytes32", "bytes32"],
+        ["0x"+ acc_and_type_hash, request_id_hash])
+    // Hash and turn to bytes
+    const msgHash = utils.arrayify(utils.keccak256(msg))
+    // Computes the EIP-191 personal message digest of message.
+    // Personal messages are converted to UTF-8 bytes and prefixed with \x19Ethereum Signed Message: and the length of message.
+    const msgHashWithPrefix = utils.hashMessage(msgHash)
 
-  const recoveredAddress = utils.recoverAddress(msgHashWithPrefix, sig);
+    const recoveredAddress = utils.recoverAddress(msgHashWithPrefix, sig);
 
-  return (
-    recoveredAddress.toLowerCase() === dauthSignerAddress.toLocaleLowerCase()
-  );
+    return recoveredAddress.toLowerCase() === dauthSignerAddress.toLocaleLowerCase()
 };
 ```
 

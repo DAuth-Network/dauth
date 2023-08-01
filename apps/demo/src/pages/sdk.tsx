@@ -248,7 +248,8 @@ const SDK: FC = () => {
                             <Input className=" py-2 border-2 w-56	" value={emailOtp} onChange={(e) => {
                                 setEmailOtp(e.target.value)
                             }} type="text" />
-
+                        </div>
+                        <div className='mt-5'>
                             <Button onClick={authEmailOtpConfirm} className="w-30 ml-10">
                                 confirm otp
                             </Button>
