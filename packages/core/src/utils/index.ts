@@ -17,9 +17,9 @@ export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3
     const {auth, signature} = proof
     // String to hexlike
     const sig = "0x" + signature
-    const {account, id_type, request_id} = auth
+    const {acc_and_type_hash, request_id} = auth
     // String to bytes and hash
-    const id_type_hash = utils.keccak256(utils.toUtf8Bytes(id_type))
+    // const acc_and_type_hash = utils.toUtf8Bytes(acc_and_type_hash)
     // request_id can be two types: string or hex
     // The request_id can have two types of values: a simple string or a hexadecimal string.
     // If the length of the request_id is 64 characters, it is treated as a hexadecimal string.
@@ -28,8 +28,8 @@ export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3
         ? utils.arrayify("0x" + request_id) : utils.keccak256(utils.toUtf8Bytes(request_id))
     // Concat data
     const msg = utils.defaultAbiCoder.encode(
-        ["bytes32", "bytes32", "bytes32"],
-        [id_type_hash, "0x" + account, request_id_hash])
+        ["bytes32", "bytes32"],
+        [acc_and_type_hash, request_id_hash])
     // Hash and turn to bytes
     const msgHash = utils.arrayify(utils.keccak256(msg))
     // Computes the EIP-191 personal message digest of message.
