@@ -164,7 +164,7 @@ export class DAuthHttpService {
             data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
         }
     }
-    async authOtpConfirmAndRecoverKey({ code, request_id, mode, id_type, withPlainAccount }: {
+    async authOtpConfirmAndRecoverKey({ code, request_id, mode, id_type, user_key, user_key_signature, withPlainAccount }: {
         code: string;
         request_id: string,
         mode: ESignMode,
@@ -181,8 +181,9 @@ export class DAuthHttpService {
                 request_id,
                 sign_mode: mode,
                 id_type,
+                user_key_signature,
+                user_key,
                 account_plain: withPlainAccount,
-                user_key: ""
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
