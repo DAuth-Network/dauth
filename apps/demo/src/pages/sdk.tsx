@@ -1,17 +1,17 @@
 import ReactJson from 'react-json-view'
-import {FC, useState} from "react";
-import {GoogleOAuthProvider} from "@react-oauth/google";
+import { FC, useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import AppleLogin from "react-apple-login";
 import GoogleLoginCom from "../components/GoogleLogin";
-import {dauth} from "../utils";
+import { dauth } from "../utils";
 import TwitterLogin from "../components/TwitterLogin";
-import {ESignMode, IOtpConfirmReturn, TSign_mode, verifyProof} from "@dauth/core";
-import {useSearchParams} from "react-router-dom";
-import {useRequest} from "ahooks";
-import {Switch} from "../components/ui/switch.tsx";
-import {Button} from "../components/ui/button.tsx";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '../components/ui/select.tsx';
-import {Input} from '../components/ui/input.tsx';
+import { ESignMode, IOtpConfirmReturn, TSign_mode, verifyProof } from "@dauth/core";
+import { useSearchParams } from "react-router-dom";
+import { useRequest } from "ahooks";
+import { Switch } from "../components/ui/switch.tsx";
+import { Button } from "../components/ui/button.tsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select.tsx';
+import { Input } from '../components/ui/input.tsx';
 
 const SDK: FC = () => {
 
@@ -19,6 +19,8 @@ const SDK: FC = () => {
     const [phone, setPhone] = useState('')
     const [smsOtp, setSmsOtp] = useState('')
     const [emailOtp, setEmailOtp] = useState('')
+    const [userKey, setUserKey] = useState('')
+    const [userKeySig, setUserKeySig] = useState('')
     const [requestId, setRequestId] = useState('test')
     const [withPlainAccount, setWithPlainAccount] = useState(false)
     const [mode, setMode] = useState<ESignMode>(ESignMode.JWT)
@@ -58,6 +60,38 @@ const SDK: FC = () => {
                 mode: mode,
                 id_type: 'mailto',
                 withPlainAccount
+            })
+            console.log(res)
+            setRes(res)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const authOtpConfirmAndGenerateKey = async () => {
+        try {
+            const res = await dauth.service.authOtpConfirmAndGenerateKey({
+                code: emailOtp,
+                request_id: requestId,
+                mode: mode,
+                id_type: 'mailto',
+                withPlainAccount
+            })
+            console.log(res)
+            setRes(res)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const authOtpConfirmAndRecoverKey = async () => {
+        try {
+            const res = await dauth.service.authOtpConfirmAndRecoverKey({
+                code: emailOtp,
+                request_id: requestId,
+                mode: mode,
+                id_type: 'mailto',
+                withPlainAccount,
+                user_key: userKey,
+                user_key_signature: userKeySig
             })
             console.log(res)
             setRes(res)
@@ -135,7 +169,7 @@ const SDK: FC = () => {
         const proof = result!.data
         const isValid = verifyProof(proof)
         if (isValid) {
-
+            console.log("valid")
         }
     }
     const onClick = (e: any) => {
@@ -160,7 +194,7 @@ const SDK: FC = () => {
                             Sign mode:
                             <Select onValueChange={selectMod} value={mode} defaultValue={ESignMode.PROOF}>
                                 <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Theme"/>
+                                    <SelectValue placeholder="Theme" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value={ESignMode.PROOF}>PROOF</SelectItem>
@@ -172,38 +206,58 @@ const SDK: FC = () => {
                         </div>
                         <div className={"flex justify-between"}>
                             Request Id: <Input className=" py-2 border-2 w-56 rounded-sm" value={requestId}
-                                               onChange={(e) => {
-                                                   setRequestId(e.target.value)
-                                               }} type="text"/>
+                                onChange={(e) => {
+                                    setRequestId(e.target.value)
+                                }} type="text" />
 
                         </div>
-                        <div className={"justify-between flex mt-2"}>
-                            withPlainAccount: <Switch onCheckedChange={onClick} checked={withPlainAccount}/>
+                        <div className={"flex justify-between"}>
+                            user key: <Input className=" py-2 border-2 w-56 rounded-sm" value={userKey}
+                                onChange={(e) => {
+                                    setUserKey(e.target.value)
+                                }} type="text" />
                         </div>
+                        <div className={"flex justify-between"}>
+                            user key signature: <Input className=" py-2 border-2 w-56 rounded-sm" value={userKeySig}
+                                onChange={(e) => {
+                                    setUserKeySig(e.target.value)
+                                }} type="text" />
+                        </div>
+                        <div className={"justify-between flex mt-2"}>
+                            withPlainAccount: <Switch onCheckedChange={onClick} checked={withPlainAccount} />
+                        </div>
+
 
                     </div>
                     <div className=" bg-gray-100 p-4">
                         <div className="text-xl">
                             Email otp example
                         </div>
-                        <div className="flex justify-between items-center"><span
+                        <div className="flex justify-start items-center"><span
                             className="w-16 inline-block">email:</span>
                             <Input className=" py-2 border-2 w-56 rounded-sm	" value={email} onChange={(e) => {
                                 setEmail(e.target.value)
-                            }} type="text"/>
+                            }} type="text" />
                             <Button onClick={authEmailOtp} className="w-40 ml-10">
                                 get otp
                             </Button>
                         </div>
-                        <br/>
-                        <div className="flex justify-between items-center">
+                        <br />
+                        <div className="flex justify-start items-center">
                             <span className="w-16 inline-block">otp: </span>
                             <Input className=" py-2 border-2 w-56	" value={emailOtp} onChange={(e) => {
                                 setEmailOtp(e.target.value)
-                            }} type="text"/>
-
-                            <Button onClick={authEmailOtpConfirm} className="w-40 ml-10">
+                            }} type="text" />
+                        </div>
+                        <div className='mt-5'>
+                            <Button onClick={authEmailOtpConfirm} className="w-30 ml-10">
                                 confirm otp
+                            </Button>
+                            <Button onClick={authOtpConfirmAndGenerateKey} className="w-30 ml-10">
+                                confirm otp generateKey
+                            </Button>
+                            <Button onClick={authOtpConfirmAndRecoverKey} className="w-30 ml-10">
+                                confirm otp RecoverKey
                             </Button>
                         </div>
 
@@ -214,19 +268,19 @@ const SDK: FC = () => {
                         </div>
                         <div className="flex justify-between items-center"><span
                             className="w-16 inline-block">Phone:</span>
-                            <Input className=" py-2 border-2 w-56 rounded-sm	" value={phone} onChange={(e) => {
+                            <Input className=" py-2 border-2 w-56 rounded-sm" value={phone} onChange={(e) => {
                                 setPhone(e.target.value)
-                            }} type="text"/>
+                            }} type="text" />
                             <Button onClick={authSMSOtp} className="w-40 ml-10">
                                 get otp
                             </Button>
                         </div>
-                        <br/>
+                        <br />
                         <div className="flex justify-between items-center">
                             <span className="w-16 inline-block">otp: </span>
-                            <Input className=" py-2 border-2 w-56	" value={smsOtp} onChange={(e) => {
+                            <Input className=" py-2 border-2 w-56" value={smsOtp} onChange={(e) => {
                                 setSmsOtp(e.target.value)
-                            }} type="text"/>
+                            }} type="text" />
 
                             <Button onClick={authSMSOtpConfirm} className="w-40 ml-10">
                                 confirm otp
@@ -254,22 +308,22 @@ const SDK: FC = () => {
                             responseMode="query"
                             responseType="code"
 
-                            redirectURI="https://demo-api.dauth.network/"/>
+                            redirectURI="https://demo-api.dauth.network/" />
                     </div>
                     <div className=" bg-gray-100 p-4  mt-10">
                         <div className="text-xl py-4">
                             Twitter signin example
                         </div>
-                        <TwitterLogin/>
+                        <TwitterLogin />
                     </div>
                 </div>
                 <div className="p-10 w-3/5">
                     {result && <><ReactJson displayDataTypes={false} quotesOnKeys={false} name={null}
-                                            collapseStringsAfterLength={128} indentWidth={2} src={result!}/>
+                        collapseStringsAfterLength={128} indentWidth={2} src={result!} />
                         {
                             mode === ESignMode.PROOF && <div>
-                            <Button onClick={verify}>verify</Button>
-                        </div>
+                                <Button onClick={verify}>verify</Button>
+                            </div>
                         }
                     </>}
 

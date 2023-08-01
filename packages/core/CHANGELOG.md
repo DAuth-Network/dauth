@@ -1,7 +1,5 @@
 # @dauth/core
 
-## 0.1.0
-
 ### Minor Changes
 
-- Add google oauth
+- Change the format of the return data for otp confirm.
