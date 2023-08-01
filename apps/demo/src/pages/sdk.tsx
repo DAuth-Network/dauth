@@ -169,7 +169,7 @@ const SDK: FC = () => {
         const proof = result!.data
         const isValid = verifyProof(proof)
         if (isValid) {
-
+            console.log("valid")
         }
     }
     const onClick = (e: any) => {
