@@ -1,4 +1,6 @@
-import { cipher, util, md } from 'node-forge'
+import * as forge from 'node-forge'
+
+const { cipher, util, md } = forge
 
 export async function encrypt(rawText: string, key: string) {
     console.log("encrypt content", rawText, " with ", key);
