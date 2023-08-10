@@ -17,7 +17,7 @@ export type TSign_mode = 'jwt' | 'proof' | 'jwtfb' | 'both'
 export enum ESignMode {
     JWT = "jwt",
     PROOF = "proof",
-    JWT_FIREBASE = "jwtdb",
+    JWT_FIREBASE = "jwtfb",
     BOTH = "both"
 }
 export interface IDauthConfig {

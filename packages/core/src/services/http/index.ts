@@ -96,7 +96,7 @@ export class DAuthHttpService {
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
             mode,
-            data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
+            data: parseData(originalText)
         }
     }
 
@@ -137,7 +137,7 @@ export class DAuthHttpService {
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
             mode,
-            data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
+            data: parseData(originalText)
         }
     }
     async authOtpConfirmAndGenerateKey({ code, request_id, mode, id_type, withPlainAccount }: {
@@ -161,7 +161,7 @@ export class DAuthHttpService {
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
             mode,
-            data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
+            data: parseData(originalText)
         }
     }
     async authOtpConfirmAndRecoverKey({ code, request_id, mode, id_type, user_key, user_key_signature, withPlainAccount }: {
@@ -188,7 +188,18 @@ export class DAuthHttpService {
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
             mode,
-            data: mode === 'jwt' ? originalText : JSON.parse(originalText!)
+            data: parseData(originalText)
         }
+    }
+}
+function parseData(data_str?: string) {
+    if (!data_str) {
+        return ""
+    }
+    try {
+        return JSON.parse(data_str)
+
+    } catch (error) {
+        return data_str
     }
 }
