@@ -1,20 +1,15 @@
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/router'
 
 const TwitterRedirect = () => {
     const router = useRouter();
-    const query = router;
-    // useEffect(() => {
-    //     const code = searchParams.get('code')
-    //     if (code) {
-    //         navigate({
-    //             pathname: "/sdk",
-    //             search: `?${createSearchParams({
-    //                 twitterAuth: code
-    //             })}`
-    //         });
-    //     }
-    // }, [searchParams])
+    const code = router.query.code;
+    if (code) {
+        router.push({
+            pathname: "/",
+            query: { twitterAuth: code },
+        });
+    }
     return (
         <div>redirecting...</div>
     )
