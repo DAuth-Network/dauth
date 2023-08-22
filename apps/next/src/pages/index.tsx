@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Input } from '@/components/ui/input';
 import dynamic from "next/dynamic";
+import { useRouter } from 'next/router'
+
 const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false });
 const SDK: FC = () => {
 
@@ -28,9 +30,8 @@ const SDK: FC = () => {
         data: IOtpConfirmReturn,
         mode: TSign_mode
     }>()
-    // const [searchParams] = useSearchParams();
-    // const code = searchParams.get("twitterAuth")
-    const code = ""
+    const router = useRouter()
+    const code = router.query.twitterAuth as string
     const authEmailOtp = async () => {
         try {
             await dauth.service.sendOtp({
@@ -293,7 +294,7 @@ const SDK: FC = () => {
                             Google oauth example
                         </div>
                         <GoogleOAuthProvider
-                            clientId="821654150370-q5hjra4s693p61l3giv7halqf42h37o1.apps.googleusercontent.com">
+                            clientId="809612086459-039b6hipube423l9svju948pm09o6g5k.apps.googleusercontent.com">
                             <GoogleLoginCom onLoginSuccess={authGoogleOAuth}></GoogleLoginCom>
                         </GoogleOAuthProvider>
                     </div>
@@ -308,7 +309,7 @@ const SDK: FC = () => {
                             responseMode="query"
                             responseType="code"
 
-                            redirectURI="https://demo-api.dauth.network/" />
+                            redirectURI="https://dev-api.dauth.network/" />
                     </div>
                     <div className=" bg-gray-100 p-4  mt-10">
                         <div className="text-xl py-4">

@@ -1,12 +1,12 @@
 import { Button } from "./ui/button";
 
-const TWITTER_CLIENT_ID = 'bG1uckxTUlJOVEk3ZjlsaU1NelE6MTpjaQ'
+const TWITTER_CLIENT_ID = 'R2dTdmg3cl94ajVSdTBWc1MtU0Y6MTpjaQ'
 const TwitterLogin = () => {
 
     function getTwitterOauthUrl() {
         const rootUrl = "https://twitter.com/i/oauth2/authorize";
         const options = {
-            redirect_uri: "https://demo-api.dauth.network/redirect/twitter",
+            redirect_uri: "https://dev-api.dauth.network/redirect/twitter",
             client_id: TWITTER_CLIENT_ID,
             state: "state",
             response_type: "code",
