@@ -6,7 +6,7 @@ import GoogleLoginCom from "../components/GoogleLogin";
 import { dauth } from "../utils";
 import TwitterLogin from "../components/TwitterLogin";
 import { ESignMode, IOtpConfirmReturn, TSign_mode, verifyProof } from "@dauth/core";
-import { useRequest } from "ahooks/lib";
+import { useLocalStorageState, useRequest } from "ahooks/lib";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
@@ -16,7 +16,10 @@ import { useRouter } from 'next/router'
 
 const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false });
 const SDK: FC = () => {
-
+    const origin =
+    typeof window !== 'undefined' && window.location.origin
+        ? window.location.origin
+        : '';
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [smsOtp, setSmsOtp] = useState('')
@@ -25,7 +28,12 @@ const SDK: FC = () => {
     const [userKeySig, setUserKeySig] = useState('')
     const [requestId, setRequestId] = useState('test')
     const [withPlainAccount, setWithPlainAccount] = useState(false)
-    const [mode, setMode] = useState<ESignMode>(ESignMode.JWT)
+    const [mode, setMode] = useLocalStorageState<ESignMode>(
+        'use-local-storage-state-demo1',
+        {
+          defaultValue: ESignMode.JWT,
+        },
+      );
     const [result, setRes] = useState<{
         data: IOtpConfirmReturn,
         mode: TSign_mode
@@ -294,7 +302,7 @@ const SDK: FC = () => {
                             Google oauth example
                         </div>
                         <GoogleOAuthProvider
-                            clientId="809612086459-039b6hipube423l9svju948pm09o6g5k.apps.googleusercontent.com">
+                            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLINT_ID as string}>
                             <GoogleLoginCom onLoginSuccess={authGoogleOAuth}></GoogleLoginCom>
                         </GoogleOAuthProvider>
                     </div>
@@ -304,12 +312,11 @@ const SDK: FC = () => {
                         </div>
                         <AppleLogin
                             callback={authAppleOAuth}
-                            clientId="com.duath.network.oauth"
+                            clientId={process.env.NEXT_PUBLIC_APPLE_CLINT_ID as string}
                             scope="email"
                             responseMode="query"
                             responseType="code"
-
-                            redirectURI="https://dev-api.dauth.network/" />
+                            redirectURI={origin} />
                     </div>
                     <div className=" bg-gray-100 p-4  mt-10">
                         <div className="text-xl py-4">

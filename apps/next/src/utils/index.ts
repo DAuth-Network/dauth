@@ -1,7 +1,7 @@
 import * as  DAuth from "@dauth/core"
 
 export const dauth = new DAuth.default({
-    baseURL: 'https://dev-api.dauth.network/dauth/sdk/v1.1/',
+    baseURL: process.env.NEXT_PUBLIC_DAUTH_BASEURL!,
     clientID: 'demo',
 })
 
