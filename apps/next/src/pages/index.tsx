@@ -25,6 +25,8 @@ const SDK: FC = () => {
     const [smsOtp, setSmsOtp] = useState('')
     const [emailOtp, setEmailOtp] = useState('')
     const [userKey, setUserKey] = useState('')
+    const [signMsg, setSignMsg] = useState('')
+    const [salt, setSalt] = useState(0)
     const [userKeySig, setUserKeySig] = useState('')
     const [requestId, setRequestId] = useState('test')
     const [withPlainAccount, setWithPlainAccount] = useState(false)
@@ -84,6 +86,23 @@ const SDK: FC = () => {
                 request_id: requestId,
                 mode: mode,
                 id_type: 'mailto',
+                withPlainAccount
+            })
+            console.log(res)
+            setRes(res)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const authOtpConfirmWithSalt = async () => {
+        try {
+            const res = await dauth.service.authOtpConfirmWithSalt({
+                code: emailOtp,
+                request_id: requestId,
+                mode: mode,
+                id_type: 'mailto',
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 withPlainAccount
             })
             console.log(res)
@@ -244,7 +263,7 @@ const SDK: FC = () => {
                             Email otp example
                         </div>
                         <div className="flex justify-start items-center"><span
-                            className="w-16 inline-block">email:</span>
+                            className="w-32 inline-block">email:</span>
                             <Input className=" py-2 border-2 w-56 rounded-sm	" value={email} onChange={(e) => {
                                 setEmail(e.target.value)
                             }} type="text" />
@@ -254,13 +273,35 @@ const SDK: FC = () => {
                         </div>
                         <br />
                         <div className="flex justify-start items-center">
-                            <span className="w-16 inline-block">otp: </span>
+                            <span className="w-32 inline-block">otp: </span>
                             <Input className=" py-2 border-2 w-56	" value={emailOtp} onChange={(e) => {
                                 setEmailOtp(e.target.value)
                             }} type="text" />
-
+                            
+                        </div>
+                        <br />
+                        <div className="flex justify-start items-center">
+                            <span className="w-32 inline-block">id_key_salt</span>
+                            <Input className=" py-2 border-2 w-56" value={salt} onChange={(e) => {
+                                setSalt(Number(e.target.value))
+                            }} type="text" />
+                            
+                        </div>
+                        <br />
+                        <div className="flex justify-start items-center">
+                            <span className="w-32 inline-block">sign_msg</span>
+                            <Input className=" py-2 border-2 w-56" value={signMsg} onChange={(e) => {
+                                setSignMsg(e.target.value)
+                            }} type="text" />
+                            
+                        </div>
+                        <br />
+                        <div className="flex justify-start">
                             <Button onClick={authEmailOtpConfirm} className="w-30 ml-10">
                                 confirm otp
+                            </Button>
+                            <Button onClick={authOtpConfirmWithSalt} className="w-30 ml-10">
+                                confirm otp with salt and sign_msg
                             </Button>
                             <Button onClick={authOtpConfirmAndGenerateKey} className="w-30 ml-10">
                                 confirm otp generateKey
@@ -276,7 +317,7 @@ const SDK: FC = () => {
                             SMS otp example
                         </div>
                         <div className="flex justify-between items-center"><span
-                            className="w-16 inline-block">Phone:</span>
+                            className="w-32 inline-block">Phone:</span>
                             <Input className=" py-2 border-2 w-56 rounded-sm" value={phone} onChange={(e) => {
                                 setPhone(e.target.value)
                             }} type="text" />
@@ -286,7 +327,7 @@ const SDK: FC = () => {
                         </div>
                         <br />
                         <div className="flex justify-between items-center">
-                            <span className="w-16 inline-block">otp: </span>
+                            <span className="w-32 inline-block">otp: </span>
                             <Input className=" py-2 border-2 w-56" value={smsOtp} onChange={(e) => {
                                 setSmsOtp(e.target.value)
                             }} type="text" />
@@ -295,6 +336,7 @@ const SDK: FC = () => {
                                 confirm otp
                             </Button>
                         </div>
+                        
 
                     </div>
                     <div className=" bg-gray-100 p-4  mt-10">

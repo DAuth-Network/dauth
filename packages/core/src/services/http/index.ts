@@ -191,6 +191,46 @@ export class DAuthHttpService {
             data: parseData(originalText)
         }
     }
+    async authOtpConfirmWithSalt({
+        code,
+        request_id,
+        mode,
+        id_type,
+        user_key,
+        user_key_signature,
+        sign_msg,
+        id_key_salt,
+        withPlainAccount }: {
+            code: string;
+            request_id: string,
+            mode: ESignMode,
+            id_type: TID_type,
+            user_key: string,
+            user_key_signature: string,
+            id_key_salt: string,
+            sign_msg: string,
+            withPlainAccount?: boolean,
+        }): Promise<any> {
+        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
+        const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
+            {
+                cipher_code,
+                session_id,
+                request_id,
+                sign_mode: mode,
+                id_type,
+                user_key_signature,
+                user_key,
+                sign_msg,
+                id_key_salt,
+                account_plain: withPlainAccount,
+            })
+        const originalText = decrypt(response.data.data, this.shareKey)
+        return {
+            mode,
+            data: parseData(originalText)
+        }
+    }
 }
 function parseData(data_str?: string) {
     if (!data_str) {
