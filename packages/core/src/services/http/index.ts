@@ -65,8 +65,8 @@ export class DAuthHttpService {
 
     async exchangeKeyAndEncrypt(rawText: string, fresh = true) {
         const { session_id, shareKey } = await this.createChanel(fresh)
-        const cipher_str = await encrypt(rawText, shareKey)
-        return { session_id, cipher_str }
+        const cipher_data = await encrypt(rawText, shareKey)
+        return { session_id, cipher_data }
     }
 
     async exchangeKeyAndDecrypt(cipherText: string) {
@@ -83,15 +83,18 @@ export class DAuthHttpService {
         mode: ESignMode,
         withPlainAccount?: boolean
     }): Promise<any> {
-        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(token)
+        const data = {
+            id_type,
+            token,
+            request_id,
+            sign_mode: mode,
+            withPlainAccount
+        }
+        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data))
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
-                id_type,
-                cipher_code,
                 session_id,
-                request_id,
-                sign_mode: mode,
-                withPlainAccount
+                cipher_data
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
@@ -105,41 +108,21 @@ export class DAuthHttpService {
         id_type: TAccount_type,
         request_id?: string,
     }): Promise<boolean> {
-        const { session_id, cipher_str: cipher_account } = await this.exchangeKeyAndEncrypt(account)
+        const data = JSON.stringify({
+            account,
+            request_id,
+            id_type,
+        })
+        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(data)
         await this.instance.post(`/send_otp`,
             {
-                cipher_account,
                 session_id,
-                request_id,
-                id_type,
+                cipher_data
             })
         return true
 
     }
 
-    async authOtpConfirm({ code, request_id, mode, id_type, withPlainAccount }: {
-        code: string;
-        request_id: string,
-        mode: ESignMode,
-        id_type: TID_type,
-        withPlainAccount?: boolean
-    }): Promise<any> {
-        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
-        const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
-            {
-                cipher_code,
-                session_id,
-                request_id,
-                sign_mode: mode,
-                id_type,
-                account_plain: withPlainAccount
-            })
-        const originalText = decrypt(response.data.data, this.shareKey)
-        return {
-            mode,
-            data: parseData(originalText)
-        }
-    }
     async authOtpConfirmAndGenerateKey({ code, request_id, mode, id_type, withPlainAccount }: {
         code: string;
         request_id: string,
@@ -147,16 +130,19 @@ export class DAuthHttpService {
         id_type: TID_type,
         withPlainAccount?: boolean,
     }): Promise<any> {
-        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
+        const data = JSON.stringify({
+            code,
+            request_id,
+            sign_mode: mode,
+            id_type,
+            account_plain: withPlainAccount,
+            user_key: ""
+        })
+        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(data, false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
-                cipher_code,
+                cipher_data,
                 session_id,
-                request_id,
-                sign_mode: mode,
-                id_type,
-                account_plain: withPlainAccount,
-                user_key: ""
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
@@ -173,17 +159,22 @@ export class DAuthHttpService {
         user_key_signature: string,
         withPlainAccount?: boolean,
     }): Promise<any> {
-        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
+        const data = {
+            code,
+            request_id,
+            sign_mode: mode,
+            id_type,
+            user_key_signature,
+            user_key,
+            account_plain: withPlainAccount,
+        }
+        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data), false)
+
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
-                cipher_code,
+                cipher_data,
                 session_id,
-                request_id,
-                sign_mode: mode,
-                id_type,
-                user_key_signature,
-                user_key,
-                account_plain: withPlainAccount,
+
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
@@ -191,7 +182,7 @@ export class DAuthHttpService {
             data: parseData(originalText)
         }
     }
-    async authOtpConfirmWithSalt({
+    async authOtpConfirm({
         code,
         request_id,
         mode,
@@ -207,23 +198,27 @@ export class DAuthHttpService {
             id_type: TID_type,
             user_key: string,
             user_key_signature: string,
-            id_key_salt: string,
+            id_key_salt: number,
             sign_msg: string,
             withPlainAccount?: boolean,
         }): Promise<any> {
-        const { session_id, cipher_str: cipher_code } = await this.exchangeKeyAndEncrypt(code, false)
+        const data = {
+            code,
+            request_id,
+            sign_mode: mode,
+            id_type,
+            user_key_signature,
+            user_key,
+            account_plain: withPlainAccount,
+            sign_msg,
+            id_key_salt,
+        }
+        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data), false)
+
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
-                cipher_code,
+                cipher_data,
                 session_id,
-                request_id,
-                sign_mode: mode,
-                id_type,
-                user_key_signature,
-                user_key,
-                sign_msg,
-                id_key_salt,
-                account_plain: withPlainAccount,
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {

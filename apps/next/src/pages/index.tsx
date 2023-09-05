@@ -17,9 +17,9 @@ import { useRouter } from 'next/router'
 const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false });
 const SDK: FC = () => {
     const origin =
-    typeof window !== 'undefined' && window.location.origin
-        ? window.location.origin
-        : '';
+        typeof window !== 'undefined' && window.location.origin
+            ? window.location.origin
+            : '';
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [smsOtp, setSmsOtp] = useState('')
@@ -33,9 +33,9 @@ const SDK: FC = () => {
     const [mode, setMode] = useLocalStorageState<ESignMode>(
         'use-local-storage-state-demo1',
         {
-          defaultValue: ESignMode.JWT,
+            defaultValue: ESignMode.JWT,
         },
-      );
+    );
     const [result, setRes] = useState<{
         data: IOtpConfirmReturn,
         mode: TSign_mode
@@ -64,21 +64,6 @@ const SDK: FC = () => {
             console.log(error)
         }
     }
-    const authEmailOtpConfirm = async () => {
-        try {
-            const res = await dauth.service.authOtpConfirm({
-                code: emailOtp,
-                request_id: requestId,
-                mode: mode,
-                id_type: 'mailto',
-                withPlainAccount
-            })
-            console.log(res)
-            setRes(res)
-        } catch (error) {
-            console.log(error)
-        }
-    }
     const authOtpConfirmAndGenerateKey = async () => {
         try {
             const res = await dauth.service.authOtpConfirmAndGenerateKey({
@@ -94,9 +79,9 @@ const SDK: FC = () => {
             console.log(error)
         }
     }
-    const authOtpConfirmWithSalt = async () => {
+    const authEmailOtpConfirm = async () => {
         try {
-            const res = await dauth.service.authOtpConfirmWithSalt({
+            const res = await dauth.service.authOtpConfirm({
                 code: emailOtp,
                 request_id: requestId,
                 mode: mode,
@@ -252,6 +237,20 @@ const SDK: FC = () => {
                                     setUserKeySig(e.target.value)
                                 }} type="text" />
                         </div>
+                        <div className="flex justify-between">
+                            <span className="w-32 inline-block">id_key_salt</span>
+                            <Input className=" py-2 border-2 w-56" value={salt} onChange={(e) => {
+                                setSalt(Number(e.target.value))
+                            }} type="text" />
+
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="w-32 inline-block">sign_msg</span>
+                            <Input className=" py-2 border-2 w-56" value={signMsg} onChange={(e) => {
+                                setSignMsg(e.target.value)
+                            }} type="text" />
+
+                        </div>
                         <div className={"justify-between flex mt-2"}>
                             withPlainAccount: <Switch onCheckedChange={onClick} checked={withPlainAccount} />
                         </div>
@@ -277,31 +276,13 @@ const SDK: FC = () => {
                             <Input className=" py-2 border-2 w-56	" value={emailOtp} onChange={(e) => {
                                 setEmailOtp(e.target.value)
                             }} type="text" />
-                            
+
                         </div>
-                        <br />
-                        <div className="flex justify-start items-center">
-                            <span className="w-32 inline-block">id_key_salt</span>
-                            <Input className=" py-2 border-2 w-56" value={salt} onChange={(e) => {
-                                setSalt(Number(e.target.value))
-                            }} type="text" />
-                            
-                        </div>
-                        <br />
-                        <div className="flex justify-start items-center">
-                            <span className="w-32 inline-block">sign_msg</span>
-                            <Input className=" py-2 border-2 w-56" value={signMsg} onChange={(e) => {
-                                setSignMsg(e.target.value)
-                            }} type="text" />
-                            
-                        </div>
+
                         <br />
                         <div className="flex justify-start">
                             <Button onClick={authEmailOtpConfirm} className="w-30 ml-10">
                                 confirm otp
-                            </Button>
-                            <Button onClick={authOtpConfirmWithSalt} className="w-30 ml-10">
-                                confirm otp with salt and sign_msg
                             </Button>
                             <Button onClick={authOtpConfirmAndGenerateKey} className="w-30 ml-10">
                                 confirm otp generateKey
@@ -336,7 +317,7 @@ const SDK: FC = () => {
                                 confirm otp
                             </Button>
                         </div>
-                        
+
 
                     </div>
                     <div className=" bg-gray-100 p-4  mt-10">
