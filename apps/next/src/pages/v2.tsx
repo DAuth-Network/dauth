@@ -254,7 +254,7 @@ const SDK: FC = () => {
                         </div>
                         <div className="flex justify-between">
                             <span className="w-32 inline-block">id_key_salt</span>
-                            <Input className=" py-2 border-2 w-56" disabled={mode === ESignMode.PROOF} value={salt} onChange={(e) => {
+                            <Input className=" py-2 border-2 w-56" value={salt} onChange={(e) => {
                                 setSalt(Number(e.target.value))
                             }} type="text" />
 
