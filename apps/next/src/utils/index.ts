@@ -4,6 +4,11 @@ export const dauth = new DAuth.default({
     baseURL: process.env.NEXT_PUBLIC_DAUTH_BASEURL!,
     clientID: 'demo',
 })
+export const dauthV2 = new DAuth.default({
+    baseURL: process.env.NEXT_PUBLIC_V2_DAUTH_BASEURL!,
+    clientID: 'demo',
+    version: 2
+})
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 

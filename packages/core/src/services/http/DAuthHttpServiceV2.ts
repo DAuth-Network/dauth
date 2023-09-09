@@ -1,80 +1,10 @@
-import axios, { AxiosResponse, AxiosInstance } from 'axios'
-import { decrypt, encrypt } from '../../utils/crypto'
-import { ESignMode, IDauthConfig, TAccount_type, TID_type } from '../../types'
-import { genKey } from '../../utils/curve'
-import { p256 } from '@noble/curves/p256';
-import * as utils from '@noble/curves/abstract/utils';
+import { AxiosResponse } from 'axios'
+import { decrypt } from '../../utils/crypto'
+import { ESignMode, TAccount_type, TID_type } from '../../types'
+import DAuthBaseService from './DAuthBaseService';
 
 
-export class DAuthHttpService {
-    private instance: AxiosInstance
-    private session_id = ''
-    private shareKey = ''
-
-    constructor(dauthConfig: IDauthConfig) {
-        this.instance = axios.create({
-            baseURL: dauthConfig.baseURL,
-        })
-        this.instance.interceptors.request.use(
-            config => {
-                config.data = {
-                    client_id: dauthConfig.clientID || 'demo',
-                    ...config.data,
-
-                }
-                return config;
-            }
-        )
-
-        this.instance.interceptors.response.use(
-            (response) => {
-                if (response.data.status === 'success') {
-                    return response
-                } else {
-                    return Promise.reject(response.data.error_msg)
-                }
-            },
-            (error) => {
-                return Promise.reject(error)
-            }
-        )
-    }
-
-    private createChanel = async (fresh = true) => {
-        if (!fresh) {
-            return { session_id: this.session_id, shareKey: this.shareKey }
-        }
-        const { localPubKey, localPriv } = await genKey()
-        const { session_id, key } = await this.exchangeKey(localPubKey)
-
-        const origShareKey = p256.getSharedSecret(localPriv, `04${key}`).slice(1)
-        const originalText = utils.bytesToHex(origShareKey)
-        const shareKey = originalText.slice(originalText.length / 2)
-        this.session_id = session_id
-        this.shareKey = shareKey
-        return { session_id, shareKey }
-    }
-    exchangeKey = async (key: string): Promise<{ key: string, session_id: string }> => {
-        try {
-            const response: AxiosResponse = await this.instance.post(`/exchange_key`, { key })
-            return response.data.data
-        } catch (error: any) {
-            throw new Error(error.message)
-        }
-    }
-
-    async exchangeKeyAndEncrypt(rawText: string, fresh = true) {
-        const { session_id, shareKey } = await this.createChanel(fresh)
-        const cipher_data = await encrypt(rawText, shareKey)
-        return { session_id, cipher_data }
-    }
-
-    async exchangeKeyAndDecrypt(cipherText: string) {
-        const { session_id, shareKey } = await this.createChanel()
-        const originalText = await decrypt(cipherText, shareKey)
-        return { session_id, originalText: originalText }
-    }
-
+class DAuthHttpServiceV2 extends DAuthBaseService {
 
     async authOauth({ token, request_id, id_type, mode, withPlainAccount }: {
         token: string;
@@ -123,12 +53,15 @@ export class DAuthHttpService {
 
     }
 
-    async authOtpConfirmAndGenerateKey({ code, request_id, mode, id_type, withPlainAccount }: {
+    async authOtpConfirmAndGenerateKey({ code, request_id, mode, id_type, withPlainAccount, id_key_salt, sign_msg }: {
         code: string;
         request_id: string,
         mode: ESignMode,
         id_type: TID_type,
+        id_key_salt: number,
+        sign_msg: string,
         withPlainAccount?: boolean,
+
     }): Promise<any> {
         const data = JSON.stringify({
             code,
@@ -136,6 +69,8 @@ export class DAuthHttpService {
             sign_mode: mode,
             id_type,
             account_plain: withPlainAccount,
+            sign_msg,
+            id_key_salt,
             user_key: ""
         })
         const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(data, false)
@@ -150,20 +85,31 @@ export class DAuthHttpService {
             data: parseData(originalText)
         }
     }
-    async authOtpConfirmAndRecoverKey({ code, request_id, mode, id_type, user_key, user_key_signature, withPlainAccount }: {
-        code: string;
-        request_id: string,
-        mode: ESignMode,
-        id_type: TID_type,
-        user_key: string,
-        user_key_signature: string,
-        withPlainAccount?: boolean,
-    }): Promise<any> {
+    async authOtpConfirmAndRecoverKey({ code,
+        request_id,
+        mode, id_type,
+        user_key,
+        user_key_signature,
+        withPlainAccount,
+        id_key_salt,
+        sign_msg }: {
+            code: string;
+            request_id: string,
+            mode: ESignMode,
+            id_type: TID_type,
+            id_key_salt: number,
+            sign_msg: string,
+            user_key: string,
+            user_key_signature: string,
+            withPlainAccount?: boolean,
+        }): Promise<any> {
         const data = {
             code,
             request_id,
             sign_mode: mode,
             id_type,
+            id_key_salt,
+            sign_msg,
             user_key_signature,
             user_key,
             account_plain: withPlainAccount,
@@ -196,10 +142,10 @@ export class DAuthHttpService {
             request_id: string,
             mode: ESignMode,
             id_type: TID_type,
-            user_key: string,
-            user_key_signature: string,
             id_key_salt: number,
             sign_msg: string,
+            user_key?: string,
+            user_key_signature?: string,
             withPlainAccount?: boolean,
         }): Promise<any> {
         const data = {
@@ -238,3 +184,4 @@ function parseData(data_str?: string) {
         return data_str
     }
 }
+export default DAuthHttpServiceV2

@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AppleLogin from "react-apple-login";
 import GoogleLoginCom from "../components/GoogleLogin";
-import { dauth } from "../utils";
+import { dauthV2 as dauth } from "../utils";
 import TwitterLogin from "../components/TwitterLogin";
 import { ESignMode, IOtpConfirmReturn, TSign_mode, verifyProof } from "@dauth/core";
 import { useLocalStorageState, useRequest } from "ahooks/lib";
@@ -25,6 +25,8 @@ const SDK: FC = () => {
     const [smsOtp, setSmsOtp] = useState('')
     const [emailOtp, setEmailOtp] = useState('')
     const [userKey, setUserKey] = useState('')
+    const [signMsg, setSignMsg] = useState('')
+    const [salt, setSalt] = useState(0)
     const [userKeySig, setUserKeySig] = useState('')
     const [requestId, setRequestId] = useState('test')
     const [withPlainAccount, setWithPlainAccount] = useState(false)
@@ -56,23 +58,8 @@ const SDK: FC = () => {
             await dauth.service.sendOtp({
                 account: phone,
                 id_type: 'tel',
-                request_id: requestId
-            })
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const authEmailOtpConfirm = async () => {
-        try {
-            const res = await dauth.service.authOtpConfirm({
-                code: emailOtp,
                 request_id: requestId,
-                mode: mode,
-                id_type: 'mailto',
-                withPlainAccount
             })
-            console.log(res)
-            setRes(res)
         } catch (error) {
             console.log(error)
         }
@@ -84,7 +71,28 @@ const SDK: FC = () => {
                 request_id: requestId,
                 mode: mode,
                 id_type: 'mailto',
-                withPlainAccount
+                withPlainAccount,
+                user_key: userKey,
+                user_key_signature: userKeySig
+            })
+            console.log(res)
+            setRes(res)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const authEmailOtpConfirm = async () => {
+        try {
+            const res = await dauth.service.authOtpConfirm({
+                code: emailOtp,
+                request_id: requestId,
+                mode: mode,
+                id_type: 'mailto',
+                id_key_salt: salt,
+                sign_msg: signMsg,
+                withPlainAccount,
+                user_key: userKey,
+                user_key_signature: userKeySig
             })
             console.log(res)
             setRes(res)
@@ -116,7 +124,9 @@ const SDK: FC = () => {
                 request_id: requestId,
                 mode,
                 id_type: 'tel',
-                withPlainAccount
+                withPlainAccount,
+                user_key: userKey,
+                user_key_signature: userKeySig
             })
             console.log(res)
             setRes(res)
@@ -131,7 +141,9 @@ const SDK: FC = () => {
                 token,
                 request_id: requestId,
                 id_type: 'google',
-                mode
+                mode,
+                user_key: userKey,
+                user_key_signature: userKeySig
             })
             console.log(res)
             setRes(res)
@@ -145,7 +157,9 @@ const SDK: FC = () => {
                 token: code!,
                 request_id: requestId,
                 id_type: 'twitter',
-                mode
+                mode,
+                user_key: userKey,
+                user_key_signature: userKeySig
             })
             console.log(res)
             setRes(res)
@@ -167,7 +181,9 @@ const SDK: FC = () => {
                 token: code,
                 request_id: requestId,
                 id_type: 'apple',
-                mode
+                mode,
+                user_key: userKey,
+                user_key_signature: userKeySig
             })
             console.log(res)
             setRes(res)
@@ -193,10 +209,9 @@ const SDK: FC = () => {
     return (
         <div className="App">
             <div className="flex items-center">
-                <h2 className="text-xl">@DAuth/core V1 example</h2>
-                <Button variant='link' onClick={() => {router.push('/v2')}}>Go to v2</Button>
+                <h2 className="text-xl">@DAuth/core V2 example</h2>
+                <Button variant='link' onClick={() => { router.push('/') }}>Go to v1</Button>
             </div>
-
             <div className="flex w-full">
                 <div>
                     <div className="bg-gray-100 p-4 my-4">
@@ -237,6 +252,20 @@ const SDK: FC = () => {
                                     setUserKeySig(e.target.value)
                                 }} type="text" />
                         </div>
+                        <div className="flex justify-between">
+                            <span className="w-32 inline-block">id_key_salt</span>
+                            <Input className=" py-2 border-2 w-56" disabled={mode === ESignMode.PROOF} value={salt} onChange={(e) => {
+                                setSalt(Number(e.target.value))
+                            }} type="text" />
+
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="w-32 inline-block">sign_msg</span>
+                            <Input className=" py-2 border-2 w-56" value={signMsg} disabled={mode === ESignMode.PROOF} onChange={(e) => {
+                                setSignMsg(e.target.value)
+                            }} type="text" />
+
+                        </div>
                         <div className={"justify-between flex mt-2"}>
                             withPlainAccount: <Switch onCheckedChange={onClick} checked={withPlainAccount} />
                         </div>
@@ -248,7 +277,7 @@ const SDK: FC = () => {
                             Email otp example
                         </div>
                         <div className="flex justify-start items-center"><span
-                            className="w-16 inline-block">email:</span>
+                            className="w-32 inline-block">email:</span>
                             <Input className=" py-2 border-2 w-56 rounded-sm	" value={email} onChange={(e) => {
                                 setEmail(e.target.value)
                             }} type="text" />
@@ -258,11 +287,15 @@ const SDK: FC = () => {
                         </div>
                         <br />
                         <div className="flex justify-start items-center">
-                            <span className="w-16 inline-block">otp: </span>
+                            <span className="w-32 inline-block">otp: </span>
                             <Input className=" py-2 border-2 w-56	" value={emailOtp} onChange={(e) => {
                                 setEmailOtp(e.target.value)
                             }} type="text" />
 
+                        </div>
+
+                        <br />
+                        <div className="flex justify-start">
                             <Button onClick={authEmailOtpConfirm} className="w-30 ml-10">
                                 confirm otp
                             </Button>
@@ -280,7 +313,7 @@ const SDK: FC = () => {
                             SMS otp example
                         </div>
                         <div className="flex justify-between items-center"><span
-                            className="w-16 inline-block">Phone:</span>
+                            className="w-32 inline-block">Phone:</span>
                             <Input className=" py-2 border-2 w-56 rounded-sm" value={phone} onChange={(e) => {
                                 setPhone(e.target.value)
                             }} type="text" />
@@ -290,7 +323,7 @@ const SDK: FC = () => {
                         </div>
                         <br />
                         <div className="flex justify-between items-center">
-                            <span className="w-16 inline-block">otp: </span>
+                            <span className="w-32 inline-block">otp: </span>
                             <Input className=" py-2 border-2 w-56" value={smsOtp} onChange={(e) => {
                                 setSmsOtp(e.target.value)
                             }} type="text" />
@@ -299,6 +332,7 @@ const SDK: FC = () => {
                                 confirm otp
                             </Button>
                         </div>
+
 
                     </div>
                     <div className=" bg-gray-100 p-4  mt-10">

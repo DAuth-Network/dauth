@@ -23,4 +23,5 @@ export enum ESignMode {
 export interface IDauthConfig {
     baseURL: string,
     clientID: string,
+    version?: number,
 }
