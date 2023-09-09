@@ -58,22 +58,26 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
         request_id: string,
         mode: ESignMode,
         id_type: TID_type,
-        id_key_salt: number,
-        sign_msg: string,
+        id_key_salt?: number,
+        sign_msg?: string,
         withPlainAccount?: boolean,
 
     }): Promise<any> {
-        const data = JSON.stringify({
+        const data = {
             code,
             request_id,
             sign_mode: mode,
             id_type,
             account_plain: withPlainAccount,
+            user_key: "",
             sign_msg,
             id_key_salt,
-            user_key: ""
-        })
-        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(data, false)
+        }
+        if (mode === ESignMode.PROOF) {
+            delete data.sign_msg,
+                delete data.id_key_salt
+        }
+        const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data), false)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
                 cipher_data,
@@ -97,10 +101,10 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
             request_id: string,
             mode: ESignMode,
             id_type: TID_type,
-            id_key_salt: number,
-            sign_msg: string,
             user_key: string,
             user_key_signature: string,
+            id_key_salt?: number,
+            sign_msg?: string,
             withPlainAccount?: boolean,
         }): Promise<any> {
         const data = {
@@ -113,6 +117,10 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
             user_key_signature,
             user_key,
             account_plain: withPlainAccount,
+        }
+        if (mode === ESignMode.PROOF) {
+            delete data.sign_msg,
+            delete data.id_key_salt
         }
         const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data), false)
 
@@ -142,8 +150,8 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
             request_id: string,
             mode: ESignMode,
             id_type: TID_type,
-            id_key_salt: number,
-            sign_msg: string,
+            id_key_salt?: number,
+            sign_msg?: string,
             user_key?: string,
             user_key_signature?: string,
             withPlainAccount?: boolean,
@@ -158,6 +166,10 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
             account_plain: withPlainAccount,
             sign_msg,
             id_key_salt,
+        }
+        if (mode === ESignMode.PROOF) {
+            delete data.sign_msg,
+            delete data.id_key_salt
         }
         const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data), false)
 

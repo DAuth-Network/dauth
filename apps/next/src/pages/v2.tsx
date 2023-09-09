@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AppleLogin from "react-apple-login";
 import GoogleLoginCom from "../components/GoogleLogin";
@@ -40,6 +40,12 @@ const SDK: FC = () => {
         data: IOtpConfirmReturn,
         mode: TSign_mode
     }>()
+    useEffect(() => {
+        if (mode === ESignMode.PROOF) {
+            setSalt(0)
+            setSignMsg('')
+        }
+    }, [mode])
     const router = useRouter()
     const code = router.query.twitterAuth as string
     const authEmailOtp = async () => {
