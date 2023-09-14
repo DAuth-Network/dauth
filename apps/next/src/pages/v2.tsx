@@ -40,12 +40,6 @@ const SDK: FC = () => {
         data: IOtpConfirmReturn,
         mode: TSign_mode
     }>()
-    useEffect(() => {
-        if (mode === ESignMode.PROOF) {
-            setSalt(0)
-            setSignMsg('')
-        }
-    }, [mode])
     const router = useRouter()
     const code = router.query.twitterAuth as string
     const authEmailOtp = async () => {
@@ -260,14 +254,14 @@ const SDK: FC = () => {
                         </div>
                         <div className="flex justify-between">
                             <span className="w-32 inline-block">id_key_salt</span>
-                            <Input className=" py-2 border-2 w-56" disabled={mode === ESignMode.PROOF} value={salt} onChange={(e) => {
+                            <Input className=" py-2 border-2 w-56" value={salt} onChange={(e) => {
                                 setSalt(Number(e.target.value))
                             }} type="text" />
 
                         </div>
                         <div className="flex justify-between">
                             <span className="w-32 inline-block">sign_msg</span>
-                            <Input className=" py-2 border-2 w-56" value={signMsg} disabled={mode === ESignMode.PROOF} onChange={(e) => {
+                            <Input className=" py-2 border-2 w-56" value={signMsg} onChange={(e) => {
                                 setSignMsg(e.target.value)
                             }} type="text" />
 
