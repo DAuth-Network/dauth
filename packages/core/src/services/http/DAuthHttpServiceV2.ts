@@ -19,7 +19,7 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
         }): Promise<any> {
         const data = {
             id_type,
-            token,
+            code: token,
             request_id,
             sign_mode: mode,
             sign_msg,
