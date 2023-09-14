@@ -6,18 +6,24 @@ import DAuthBaseService from './DAuthBaseService';
 
 class DAuthHttpServiceV2 extends DAuthBaseService {
 
-    async authOauth({ token, request_id, id_type, mode, withPlainAccount }: {
-        token: string;
-        request_id: string,
-        id_type: TID_type,
-        mode: ESignMode,
-        withPlainAccount?: boolean
-    }): Promise<any> {
+    async authOauth({ token, request_id, id_type, mode, sign_msg,
+        id_key_salt, withPlainAccount }: {
+            token: string;
+            request_id: string,
+            id_type: TID_type,
+            mode: ESignMode,
+            sign_msg: string,
+            id_key_salt: number
+            withPlainAccount?: boolean,
+
+        }): Promise<any> {
         const data = {
             id_type,
             token,
             request_id,
             sign_mode: mode,
+            sign_msg,
+            id_key_salt,
             withPlainAccount
         }
         const { session_id, cipher_data } = await this.exchangeKeyAndEncrypt(JSON.stringify(data))
@@ -85,24 +91,26 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
             data: parseData(originalText)
         }
     }
-    async authOtpConfirmAndRecoverKey({ code,
+    async authOtpConfirmAndRecoverKey({
+        code,
         request_id,
         mode, id_type,
         user_key,
         user_key_signature,
         withPlainAccount,
         id_key_salt,
-        sign_msg }: {
-            code: string;
-            request_id: string,
-            mode: ESignMode,
-            id_type: TID_type,
-            user_key: string,
-            user_key_signature: string,
-            id_key_salt?: number,
-            sign_msg?: string,
-            withPlainAccount?: boolean,
-        }): Promise<any> {
+        sign_msg
+    }: {
+        code: string;
+        request_id: string,
+        mode: ESignMode,
+        id_type: TID_type,
+        user_key: string,
+        user_key_signature: string,
+        id_key_salt?: number,
+        sign_msg?: string,
+        withPlainAccount?: boolean,
+    }): Promise<any> {
         const data = {
             code,
             request_id,
@@ -137,17 +145,18 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
         user_key_signature,
         sign_msg,
         id_key_salt,
-        withPlainAccount }: {
-            code: string;
-            request_id: string,
-            mode: ESignMode,
-            id_type: TID_type,
-            id_key_salt?: number,
-            sign_msg?: string,
-            user_key?: string,
-            user_key_signature?: string,
-            withPlainAccount?: boolean,
-        }): Promise<any> {
+        withPlainAccount
+    }: {
+        code: string;
+        request_id: string,
+        mode: ESignMode,
+        id_type: TID_type,
+        id_key_salt?: number,
+        sign_msg?: string,
+        user_key?: string,
+        user_key_signature?: string,
+        withPlainAccount?: boolean,
+    }): Promise<any> {
         const data = {
             code,
             request_id,
