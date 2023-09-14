@@ -5,21 +5,27 @@ import DAuthBaseService from './DAuthBaseService';
 
 
 class DAuthHttpService extends DAuthBaseService {
-    async authOauth({ token, request_id, id_type, mode, withPlainAccount }: {
-        token: string;
-        request_id: string,
-        id_type: TID_type,
-        mode: ESignMode,
-        withPlainAccount?: boolean
-    }): Promise<any> {
+    async authOauth({ token, request_id, id_type, mode, withPlainAccount, sign_msg,
+        id_key_salt }: {
+            token: string;
+            request_id: string,
+            id_type: TID_type,
+            mode: ESignMode,
+            sign_msg: string,
+            id_key_salt: number,
+            withPlainAccount?: boolean
+        }): Promise<any> {
         const { session_id, cipher_data: cipher_code } = await this.exchangeKeyAndEncrypt(token)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
+                code: token,
                 id_type,
                 cipher_code,
                 session_id,
                 request_id,
                 sign_mode: mode,
+                sign_msg,
+                id_key_salt,
                 withPlainAccount
             })
         const originalText = decrypt(response.data.data, this.shareKey)

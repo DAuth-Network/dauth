@@ -6,7 +6,7 @@ import { p256 } from '@noble/curves/p256';
 import * as utils from '@noble/curves/abstract/utils';
 
 
-export default class DAuthHttpService {
+export default class DAuthBaseService {
     instance: AxiosInstance
     session_id = ''
     shareKey = ''
