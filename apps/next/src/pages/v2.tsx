@@ -72,6 +72,8 @@ const SDK: FC = () => {
                 mode: mode,
                 id_type: 'mailto',
                 withPlainAccount,
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 user_key: userKey,
                 user_key_signature: userKeySig
             })
