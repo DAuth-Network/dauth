@@ -109,6 +109,8 @@ const SDK: FC = () => {
                 request_id: requestId,
                 mode: mode,
                 id_type: 'mailto',
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 withPlainAccount,
                 user_key: userKey,
                 user_key_signature: userKeySig
@@ -126,6 +128,8 @@ const SDK: FC = () => {
                 request_id: requestId,
                 mode,
                 id_type: 'tel',
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 withPlainAccount,
                 user_key: userKey,
                 user_key_signature: userKeySig
@@ -143,6 +147,8 @@ const SDK: FC = () => {
                 token,
                 request_id: requestId,
                 id_type: 'google',
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 mode,
                 user_key: userKey,
                 user_key_signature: userKeySig
@@ -159,6 +165,8 @@ const SDK: FC = () => {
                 token: code!,
                 request_id: requestId,
                 id_type: 'twitter',
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 mode,
                 user_key: userKey,
                 user_key_signature: userKeySig
@@ -184,6 +192,8 @@ const SDK: FC = () => {
                 request_id: requestId,
                 id_type: 'apple',
                 mode,
+                id_key_salt: salt,
+                sign_msg: signMsg,
                 user_key: userKey,
                 user_key_signature: userKeySig
             })
