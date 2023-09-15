@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router'
 
-const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false });
+const DynamicReactiJson = dynamic(import('react-json-view'), { ssr: false });
 const SDK: FC = () => {
     const origin =
         typeof window !== 'undefined' && window.location.origin
