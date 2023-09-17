@@ -1,5 +1,5 @@
-import {IOtpConfirmReturn} from "../types"
-import {utils} from "ethers"
+import { IOtpConfirmReturn, IOtpConfirmReturnV2 } from "../types"
+import { utils } from "ethers"
 
 export const isEmail = (email: string) => {
     const re = /\S+@\S+\.\S+/
@@ -14,10 +14,10 @@ export const sleep = (ms = 1000) => {
 }
 export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3b4e49Fd77A959B704f6a045eeA92bd55b3b571') => {
 
-    const {auth, signature} = proof
+    const { auth, signature } = proof
     // String to hexlike
     const sig = "0x" + signature
-    const {acc_and_type_hash, request_id} = auth
+    const { acc_and_type_hash, request_id } = auth
     // request_id can be two types: string or hex
     // The request_id can have two types of values: a simple string or a hexadecimal string.
     // If the length of the request_id is 64 characters, it is treated as a hexadecimal string.
@@ -27,7 +27,7 @@ export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3
     // Concat data
     const msg = utils.defaultAbiCoder.encode(
         ["bytes32", "bytes32"],
-        ["0x"+ acc_and_type_hash, request_id_hash])
+        ["0x" + acc_and_type_hash, request_id_hash])
     // Hash and turn to bytes
     const msgHash = utils.arrayify(utils.keccak256(msg))
     // Computes the EIP-191 personal message digest of message.
@@ -38,5 +38,31 @@ export const verifyProof = (proof: IOtpConfirmReturn, dauthSignerAddress = '0xf3
 
     return recoveredAddress.toLowerCase() === dauthSignerAddress.toLocaleLowerCase()
 
+}
 
+
+
+export const verifyProofV2 = async (proof: IOtpConfirmReturnV2, signed_msg: string) => {
+
+    const { auth, signature } = proof
+    const { id_pub_key } = auth
+    const signed_msg_hash = utils.arrayify(utils.keccak256(utils.toUtf8Bytes(signed_msg)))
+
+    // Computes the EIP-191 personal message digest of message.
+    // Personal messages are converted to UTF-8 bytes and prefixed with \x19Ethereum Signed Message: and the length of message.
+    const msgHash = utils.hashMessage(signed_msg_hash);
+
+    const pubKey = utils.computePublicKey(utils.recoverPublicKey(msgHash, "0x" + signature), true)
+    return "0x" +id_pub_key.toLowerCase() === pubKey.toLowerCase()
+}
+export function parseData(data_str?: string) {
+    if (!data_str) {
+        return ""
+    }
+    try {
+        return JSON.parse(data_str)
+
+    } catch (error) {
+        return data_str
+    }
 }

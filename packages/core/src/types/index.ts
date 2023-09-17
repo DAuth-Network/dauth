@@ -1,7 +1,20 @@
 export interface IOtpConfirmReturn {
     auth: {
         acc_and_type_hash: string,
-        request_id: string
+        request_id: string,
+    }
+    signature: string,
+    ustore?:
+    {
+        user_key: "",
+        user_key_sealed: "",
+        user_key_signed: ""
+    }
+}
+export interface IOtpConfirmReturnV2 {
+    auth: {
+        acc_and_type_hash: string,
+        id_pub_key: string,
     }
     signature: string,
     ustore?:

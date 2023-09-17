@@ -5,7 +5,7 @@ import AppleLogin from "react-apple-login";
 import GoogleLoginCom from "../components/GoogleLogin";
 import { dauthV2 as dauth } from "../utils";
 import TwitterLogin from "../components/TwitterLogin";
-import { ESignMode, IOtpConfirmReturn, TSign_mode, verifyProof } from "@dauth/core";
+import { ESignMode, IOtpConfirmReturnV2, TSign_mode, verifyProof, verifyProofV2 } from "@dauth/core";
 import { useLocalStorageState, useRequest } from "ahooks/lib";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router'
 
-const DynamicReactiJson = dynamic(import('react-json-view'), { ssr: false });
+const DynamicReactJson = dynamic(import('react-json-view'), { ssr: false });
 const SDK: FC = () => {
     const origin =
         typeof window !== 'undefined' && window.location.origin
@@ -37,7 +37,7 @@ const SDK: FC = () => {
         },
     );
     const [result, setRes] = useState<{
-        data: IOtpConfirmReturn,
+        data: IOtpConfirmReturnV2,
         mode: TSign_mode
     }>()
     const router = useRouter()
@@ -203,9 +203,10 @@ const SDK: FC = () => {
             console.log(error)
         }
     }
-    const verify = () => {
+    const verify = async () => {
         const proof = result!.data
-        const isValid = verifyProof(proof)
+        const isValid = await verifyProofV2(proof, signMsg)
+        console.log("isValid", isValid)
         if (isValid) {
             console.log("valid")
         }

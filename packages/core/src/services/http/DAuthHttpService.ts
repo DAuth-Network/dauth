@@ -2,16 +2,18 @@ import { AxiosResponse } from 'axios'
 import { decrypt } from '../../utils/crypto'
 import { ESignMode, TAccount_type, TID_type } from '../../types'
 import DAuthBaseService from './DAuthBaseService';
+import { parseData } from '../../utils';
 
 
 class DAuthHttpService extends DAuthBaseService {
-    async authOauth({ token, request_id, id_type, mode, withPlainAccount}: {
-            token: string;
-            request_id: string,
-            id_type: TID_type,
-            mode: ESignMode,
-            withPlainAccount?: boolean
-        }): Promise<any> {
+    
+    async authOauth({ token, request_id, id_type, mode, withPlainAccount }: {
+        token: string;
+        request_id: string,
+        id_type: TID_type,
+        mode: ESignMode,
+        withPlainAccount?: boolean
+    }): Promise<any> {
         const { session_id, cipher_data: cipher_code } = await this.exchangeKeyAndEncrypt(token)
         const response: AxiosResponse = await this.instance.post(`/auth_in_one`,
             {
@@ -122,15 +124,5 @@ class DAuthHttpService extends DAuthBaseService {
         }
     }
 }
-function parseData(data_str?: string) {
-    if (!data_str) {
-        return ""
-    }
-    try {
-        return JSON.parse(data_str)
 
-    } catch (error) {
-        return data_str
-    }
-}
 export default DAuthHttpService

@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 import { decrypt } from '../../utils/crypto'
 import { ESignMode, TAccount_type, TID_type } from '../../types'
 import DAuthBaseService from './DAuthBaseService';
+import { parseData } from '../../utils';
 
 
 class DAuthHttpServiceV2 extends DAuthBaseService {
@@ -181,16 +182,6 @@ class DAuthHttpServiceV2 extends DAuthBaseService {
             data: parseData(originalText)
         }
     }
-}
-function parseData(data_str?: string) {
-    if (!data_str) {
-        return ""
-    }
-    try {
-        return JSON.parse(data_str)
-
-    } catch (error) {
-        return data_str
-    }
+    
 }
 export default DAuthHttpServiceV2
