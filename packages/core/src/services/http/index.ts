@@ -91,7 +91,7 @@ export class DAuthHttpService {
                 session_id,
                 request_id,
                 sign_mode: mode,
-                withPlainAccount
+                account_plain: withPlainAccount
             })
         const originalText = decrypt(response.data.data, this.shareKey)
         return {
